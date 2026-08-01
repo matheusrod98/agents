@@ -1,9 +1,11 @@
 PI := $(HOME)/.pi/agent
 AGENTS := $(HOME)/Projects/agents/.pi/agent
 
-.PHONY: setup
+.PHONY: setup setup\:pi
 
-setup:
+setup: setup\:pi
+
+setup\:pi:
 	mkdir -p "$(PI)"
 	ln -sfn "$(AGENTS)/settings.json" "$(PI)/settings.json"
 	ln -sfn "$(AGENTS)/extensions" "$(PI)/extensions"
