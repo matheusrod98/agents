@@ -1,5 +1,5 @@
 PI := $(HOME)/.pi/agent
-AGENTS := $(AGENTS)
+AGENTS := $(HOME)/Projects/agents
 
 .PHONY: all pi
 
