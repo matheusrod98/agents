@@ -18,15 +18,14 @@ make
 
 The default target installs both the Pi configuration and the MCP registry using symlinks, so subsequent repository changes take effect without reinstalling.
 
-Skills live in `skills/` and are discovered natively by Pi from `~/.agents/skills` (a global skill location), so no symlink is needed for them.
+Skills live in `skills/`. Pi discovers them natively from `~/.agents/skills` (a global skill location); `make pi:skills` also links them into `~/.pi/agent/skills` so every Pi resource is represented in `~/.pi/agent` (redundant but harmless).
 
 ### Available targets
 
 ```sh
 make             # install Pi resources and the MCP registry
-make pi          # install settings, extensions, prompts, and themes
-make pi:settings # install an individual Pi resource (also: extensions, prompts, themes)
-make pi:skills   # no-op: skills are discovered natively from ~/.agents/skills
+make pi          # install settings, extensions, prompts, themes, and skills
+make pi:settings # install an individual Pi resource (also: extensions, prompts, themes, skills)
 make mcp         # install the shared MCP registry
 ```
 

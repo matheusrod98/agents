@@ -7,7 +7,7 @@ MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 
 all: pi mcp
 
-pi: pi\:settings pi\:extensions pi\:prompts pi\:themes
+pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
 pi\:settings:
 	mkdir -p "$(PI)"
@@ -25,10 +25,9 @@ pi\:themes:
 	mkdir -p "$(PI)"
 	ln -sfn "$(AGENTS)/.pi/agent/themes" "$(PI)/themes"
 
-# Skills live in $(AGENTS)/skills, which pi discovers natively from
-# ~/.agents/skills (a global skill location). No symlink is required.
 pi\:skills:
-	@echo "Skills are discovered natively by pi from $(AGENTS)/skills; nothing to link."
+	mkdir -p "$(PI)"
+	ln -sfn "$(AGENTS)/skills" "$(PI)/skills"
 
 pi\:web-search:
 	mkdir -p "$(PI)"
