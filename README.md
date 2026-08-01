@@ -1,12 +1,11 @@
 # Agents
 
-Minimal personal Pi configuration.
+Minimal personal agent configuration.
 
 ## Setup
 
 ```sh
-make setup
+make            # same as make pi
+make pi         # link all Pi resources (settings, extensions, prompts, themes, skills)
+make pi:skills  # link skills into ~/.pi/agent/skills
 ```
-
-The Makefile links the tracked resources under `.pi/agent/` into Pi's global
-resource directory.
