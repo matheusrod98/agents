@@ -1,27 +1,28 @@
 PI := $(HOME)/.pi/agent
-AGENTS := $(HOME)/Projects/agents/.pi/agent
-SKILLS := $(HOME)/Projects/agents/.agents/skills
+AGENT_SKILLS := $(HOME)/Projects/agents/.agents/skills
 
-.PHONY: pi pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
+.PHONY: all pi
+
+all: pi
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
 pi\:settings:
 	mkdir -p "$(PI)"
-	ln -sfn "$(AGENTS)/settings.json" "$(PI)/settings.json"
+	ln -sfn "$(HOME)/Projects/agents/.pi/agent/settings.json" "$(PI)/settings.json"
 
 pi\:extensions:
 	mkdir -p "$(PI)"
-	ln -sfn "$(AGENTS)/extensions" "$(PI)/extensions"
+	ln -sfn "$(HOME)/Projects/agents/.pi/agent/extensions" "$(PI)/extensions"
 
 pi\:prompts:
 	mkdir -p "$(PI)"
-	ln -sfn "$(AGENTS)/prompts" "$(PI)/prompts"
+	ln -sfn "$(HOME)/Projects/agents/.pi/agent/prompts" "$(PI)/prompts"
 
 pi\:themes:
 	mkdir -p "$(PI)"
-	ln -sfn "$(AGENTS)/themes" "$(PI)/themes"
+	ln -sfn "$(HOME)/Projects/agents/.pi/agent/themes" "$(PI)/themes"
 
 pi\:skills:
 	mkdir -p "$(PI)"
-	ln -sfn "$(SKILLS)" "$(PI)/skills"
+	ln -sfn "$(AGENT_SKILLS)" "$(PI)/skills"
