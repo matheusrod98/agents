@@ -5,7 +5,7 @@ Minimal personal agent configuration.
 ## Setup
 
 ```sh
-make            # same as make pi
-make pi         # link all Pi resources (settings, extensions, prompts, themes, skills)
-make pi:skills  # link skills into ~/.pi/agent/skills
+make            # setup all coding agents
+make pi         # setup all Pi resources (settings, extensions, prompts, themes, skills)
+make pi:skills  # setup pi skills
 ```
