@@ -1,9 +1,11 @@
 PI := $(HOME)/.pi/agent
 AGENTS := $(HOME)/Projects/agents
+XDG_CONFIG_HOME ?= $(HOME)/.config
+MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 
-.PHONY: all pi
+.PHONY: all pi mcp
 
-all: pi
+all: pi mcp
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
@@ -26,3 +28,11 @@ pi\:themes:
 pi\:skills:
 	mkdir -p "$(PI)"
 	ln -sfn "$(AGENTS)/.pi/agent/skills" "$(PI)/skills"
+
+pi\:web-search:
+	mkdir -p "$(PI)"
+	ln -sfn "$(agents)/.pi/web-search.json" "$(PI)/web-search.json"
+
+mcp:
+	mkdir -p "$(dir $(MCP_CONFIG))"
+	ln -sfn "$(AGENTS)/.mcp.json" "$(MCP_CONFIG)"
