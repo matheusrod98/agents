@@ -6,7 +6,6 @@ Minimal personal Pi configuration.
 
 ```sh
 make setup
-make check
 ```
 
 The Makefile links the tracked resources under `.pi/agent/` into Pi's global

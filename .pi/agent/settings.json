@@ -10,5 +10,7 @@
   ],
   "hideThinkingBlock": true,
   "packages": [],
-  "quietStartup": false
+  "quietStartup": false,
+  "lastChangelogVersion": "0.83.0",
+  "theme": "dark"
 }
