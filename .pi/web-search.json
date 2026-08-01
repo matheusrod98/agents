@@ -1,0 +1,4 @@
+{
+	"workflow": "auto-summary",
+	"summaryModel": "opencode/deepseek-v4-flash-free:max"
+}

@@ -9,7 +9,9 @@
     "opencode/deepseek-v4-flash-free:max"
   ],
   "hideThinkingBlock": true,
-  "packages": [],
+  "packages": [
+    "npm:pi-web-access"
+  ],
   "quietStartup": false,
   "lastChangelogVersion": "0.83.0",
   "theme": "dark"
