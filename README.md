@@ -27,9 +27,10 @@ make             # install Pi resources and the MCP registry
 make pi          # install settings, extensions, prompts, themes, and skills
 make pi:settings # install an individual Pi resource (also: extensions, prompts, themes, skills)
 make mcp         # install the shared MCP registry
+make opencode    # link the skills into opencode's global skills directory
 ```
 
-Pi resources are linked into `~/.pi/agent`. The MCP registry is linked to `$XDG_CONFIG_HOME/mcp/mcp.json`, or `~/.config/mcp/mcp.json` when `XDG_CONFIG_HOME` is unset.
+Pi resources are linked into `~/.pi/agent`. The MCP registry is linked to `$XDG_CONFIG_HOME/mcp/mcp.json`, or `~/.config/mcp/mcp.json` when `XDG_CONFIG_HOME` is unset. opencode skills are linked per-skill into `$XDG_CONFIG_HOME/opencode/skills`, or `~/.config/opencode/skills`; opencode also auto-loads `~/.agents/skills` on its own.
 
 ## Home Manager
 
