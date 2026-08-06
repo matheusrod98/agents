@@ -3,11 +3,11 @@ CLAUDE_CONFIG_DIR ?= $(HOME)/.claude
 AGENTS := $(HOME)/.agents
 XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
-OPCODE_CONFIG_DIR ?= $(XDG_CONFIG_HOME)/opencode
+OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
 .PHONY: all pi mcp claude-code opencode
 
-all: pi mcp claude-code opencode
+all: mcp pi claude-code opencode
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
@@ -39,14 +39,26 @@ mcp:
 	mkdir -p "$(dir $(MCP_CONFIG))"
 	ln -sfn "$(AGENTS)/.mcp.json" "$(MCP_CONFIG)"
 
-claude-code: claude-code\:skills
+claude-code: claude-code\:skills claude-code\:settings
 
 claude-code\:skills:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
 	ln -sfn "$(AGENTS)/skills" "$(CLAUDE_CONFIG_DIR)/skills"
 
-opencode: opencode\:skills
+claude-code\:settings:
+	mkdir -p "$(CLAUDE_CONFIG_DIR)"
+	ln -sfn "$(AGENTS)/claude-code/settings.json" "$(CLAUDE_CONFIG_DIR)/settings.json"
+
+opencode: opencode\:config opencode\:tui opencode\:skills
+
+opencode\:config:
+	mkdir -p "$(OPENCODE_CONFIG_DIR)"
+	ln -sfn "$(AGENTS)/opencode/opencode.json" "$(OPENCODE_CONFIG_DIR)/opencode.json"
+
+opencode\:tui:
+	mkdir -p "$(OPENCODE_CONFIG_DIR)"
+	ln -sfn "$(AGENTS)/opencode/tui.json" "$(OPENCODE_CONFIG_DIR)/tui.json"
 
 opencode\:skills:
-	mkdir -p "$(OPCODE_CONFIG_DIR)/skills"
-	ln -sfn $(AGENTS)/skills/* "$(OPCODE_CONFIG_DIR)/skills/"
+	mkdir -p "$(OPENCODE_CONFIG_DIR)/skills"
+	ln -sfn $(AGENTS)/skills/* "$(OPENCODE_CONFIG_DIR)/skills/"
