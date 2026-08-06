@@ -1,0 +1,14 @@
+{
+  "enabledMcpjsonServers": [
+    "aws",
+    "context7",
+    "drawio",
+    "excalidraw",
+    "figma",
+    "github",
+    "gitlab",
+    "grafana",
+    "kubernetes",
+    "playwright"
+  ]
+}
