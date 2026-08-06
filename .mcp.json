@@ -21,6 +21,9 @@
       "url": "https://mcp.figma.com/mcp"
     },
     "github": {
+      "args": [
+        "--toolsets=default,projects"
+      ],
       "command": "/nix/store/3bpbhjr3ijss6y07n8apf8j7gy338665-github-mcp-server/bin/github-mcp-server",
       "type": "stdio"
     },
