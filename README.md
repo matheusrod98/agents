@@ -2,6 +2,24 @@
 
 Personal configuration for coding agents.
 
+## Repo boundary: `~/.agents` vs `~/.dotfiles`
+
+Two repos, two questions:
+
+- **`~/.dotfiles`** answers *"what does this machine install and run?"* —
+  packages, derivations, systemd services, secrets, session wiring.
+  Declarative Nix, one flake lock, rebuilt to switch.
+- **`~/.agents`** answers *"how do my agents behave?"* — settings, prompts,
+  themes, skills, and MCP **client** registrations. Portable, git-iterated,
+  symlinked in via `make`, no rebuild.
+
+The test: **is it a thing to install, or content an agent reads?**
+Binaries, packages and services live in `~/.dotfiles` (see
+`modules/home/ai/`); config, prompts and skills live here. `open-computer-use`
+follows this rule too: its binary, runtime env and a11y service are packaged
+in `~/.dotfiles/modules/home/ai/open-computer-use.nix`; only its MCP
+registration (below) and skill live here.
+
 ## Prerequisites
 
 - Pi
@@ -30,22 +48,31 @@ make mcp         # install the shared MCP registry
 make codex       # link Codex's config.toml
 make claude-code # link claude-code's skills and global settings.json
 make opencode    # link opencode's config, tui config, and skills
-make open-computer-use      # fetch the native binary + build the Nix runtime env
-make open-computer-use:a11y  # install/start the AT-SPI accessibility bus user service
 ```
 
 Pi resources are linked into `~/.pi/agent`. The MCP registry is linked to `$XDG_CONFIG_HOME/mcp/mcp.json`, or `~/.config/mcp/mcp.json` when `XDG_CONFIG_HOME` is unset. Claude Code's global `settings.json` is linked from `claude-code/settings.json` to `$CLAUDE_CONFIG_DIR/settings.json` (default `~/.claude/settings.json`); skills are linked to `$CLAUDE_CONFIG_DIR/skills`. opencode's `opencode.json` and `tui.json` are linked from `opencode/` into `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`); skills are linked per-skill into `$XDG_CONFIG_HOME/opencode/skills`; opencode also auto-loads `~/.agents/skills` on its own. Codex's `config.toml` is linked from `codex/config.toml` to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`); skills are linked to `$CODEX_HOME/skills`.
 
 ## Open Computer Use
 
-All four agents expose `open-computer-use` (the open-source Computer Use MCP server) through `bin/open-computer-use`, an absolute path that only needs to exist at `~/.agents/bin` (no agent restart required after `make`).
+All four agents expose `open-computer-use` (the open-source Computer Use MCP
+server) through the MCP registrations below.
 
-- **Binary**: `make open-computer-use` downloads the pinned npm tarball and extracts only the statically-linked Linux runtime into `bin/open-computer-use-native`. No nix-ld or shim needed.
-- **Runtime env**: the Linux runtime is a Go binary that runs an embedded Python script (`runtime.py`) requiring `python3` + PyGObject (`gi`) with the Atspi namespace, plus GTK/AT-SPI typelibs. `flake.nix` builds `open-computer-use-runtime-env` (python3-with-packages + `GI_TYPELIB_PATH`), and `make` writes a `bin/open-computer-use` wrapper that sources it before exec'ing the native binary. MCP configs point at the wrapper.
-- **A11y bus**: games and most non-GNOME sessions do not autostart the AT-SPI bus. `make open-computer-use:a11y` installs and starts `open-computer-use-a11y.service` (user systemd) running `at-spi-bus-launcher`; the Computer Use tools need it to enumerate and inspect apps.
-- **Skill**: `skills/open-computer-use` is vendored from `iFurySt/open-codex-computer-use` and propagates to Claude Code, opencode, and Pi through the existing skills symlinks; `codex:skills` links it into Codex.
+- **Installation is declarative**: the native binary, PyGObject/AT-SPI runtime
+  env, and stable launchers (`~/.local/bin/open-computer-use`, `ocu`) are
+  built by `~/.dotfiles/modules/home/ai/open-computer-use.nix`; the AT-SPI
+  accessibility bus runs as the home-manager user service
+  `at-spi-bus-launcher.service`. No `make` target needed — install with
+  `sudo nh os switch` in `~/.dotfiles`, then relaunch any app started before
+  the bus (processes only register with AT-SPI at startup).
+- **Registrations** (client side, this repo): the shared `.mcp.json` (used by
+  Pi), `codex/config.toml`, `claude-code/settings.json`, and
+  `opencode/opencode.json` all point at `/home/matheus/.local/bin/open-computer-use`.
+- **Skill**: `skills/open-computer-use` is vendored from
+  `iFurySt/open-codex-computer-use` and propagates to Claude Code, opencode,
+  and Pi through the existing skills symlinks; `codex:skills` links it into
+  Codex.
 
-MCP entries are registered directly in the managed configs: the shared `.mcp.json` (used by Pi), `codex/config.toml`, `claude-code/settings.json`, and `opencode/opencode.json`.
+MCP entries are registered directly in the managed configs.
 
 ## Home Manager
 

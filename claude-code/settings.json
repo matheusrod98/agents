@@ -1,15 +1,17 @@
 {
-  "editorMode": "vim",
   "permissions": {
     "defaultMode": "auto"
   },
   "enabledPlugins": {
-    "playwright@claude-plugins-official": true
+    "playwright@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true,
+    "slack@claude-plugins-official": true
   },
+  "editorMode": "vim",
   "mcpServers": {
     "open-computer-use": {
       "type": "stdio",
-      "command": "/home/matheus/.agents/bin/open-computer-use",
+      "command": "/home/matheus/.local/bin/open-computer-use",
       "args": [
         "mcp"
       ]
