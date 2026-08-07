@@ -35,6 +35,13 @@
       "command": "/nix/store/lnxnsm7nynic53p48xwdhpzcsdvlaivl-mcp-grafana-1.0.0/bin/mcp-grafana",
       "type": "stdio"
     },
+    "open-computer-use": {
+      "command": "/home/matheus/.agents/bin/open-computer-use",
+      "args": [
+        "mcp"
+      ],
+      "type": "stdio"
+    },
     "kubernetes": {
       "command": "/nix/store/53jh7xf0pgdlab6pgj3fjq37z17mm7kb-kubernetes-mcp-server-0.0.65/bin/kubernetes-mcp-server",
       "type": "stdio"

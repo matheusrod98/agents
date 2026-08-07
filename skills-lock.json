@@ -138,6 +138,12 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/writing-great-skills/SKILL.md",
       "computedHash": "4deb21855fb4deeeb1b8217b041faff003fd0c915d24a22f636851c520bc9c5c"
+    },
+    "open-computer-use": {
+      "source": "iFurySt/open-codex-computer-use",
+      "sourceType": "github",
+      "skillPath": "skills/open-computer-use/SKILL.md",
+      "computedHash": "de6c92c53fed907131b83834e0d85f4ff03e011a0f3468eb71649e6484782cbb"
     }
   }
 }
