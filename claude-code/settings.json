@@ -1,5 +1,8 @@
 {
   "permissions": {
     "defaultMode": "auto"
+  },
+  "enabledPlugins": {
+    "playwright@claude-plugins-official": true
   }
 }
