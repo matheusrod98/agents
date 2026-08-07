@@ -1,13 +1,14 @@
 PI := $(HOME)/.pi/agent
 CLAUDE_CONFIG_DIR ?= $(HOME)/.claude
+CODEX_HOME ?= $(HOME)/.codex
 AGENTS := $(HOME)/.agents
 XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode
+.PHONY: all pi mcp claude-code opencode codex
 
-all: mcp pi claude-code opencode
+all: mcp pi claude-code opencode codex
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
@@ -62,3 +63,9 @@ opencode\:tui:
 opencode\:skills:
 	mkdir -p "$(OPENCODE_CONFIG_DIR)/skills"
 	ln -sfn $(AGENTS)/skills/* "$(OPENCODE_CONFIG_DIR)/skills/"
+
+codex: codex\:config
+
+codex\:config:
+	mkdir -p "$(CODEX_HOME)"
+	ln -sfn "$(AGENTS)/codex/config.toml" "$(CODEX_HOME)/config.toml"
