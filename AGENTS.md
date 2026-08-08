@@ -21,3 +21,8 @@ than editing files under agent config directories directly.
   dependencies whenever the MCP registry changes.
 - Playwright MCP requires `PLAYWRIGHT_MCP_EXECUTABLE_PATH` in the environment.
 - Read `README.md` when changing setup, install targets, or the runtime contract.
+
+## Skill Updates
+
+After `make skills:update`, review every changed skill file, using a subagent, and its upstream
+source for security before committing the update.

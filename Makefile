@@ -5,7 +5,7 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode codex doctor
+.PHONY: all pi mcp claude-code opencode codex doctor skills\:update
 
 all: mcp pi claude-code opencode codex
 	@$(MAKE) doctor
@@ -80,3 +80,13 @@ codex\:skills:
 
 doctor:
 	@"$(CURDIR)/doctor.sh"
+
+skills\:update:
+	@set -eu; \
+	tmp_parent=$$(mktemp -d); \
+	tmp="$$tmp_parent/.agents"; \
+	mkdir "$$tmp"; \
+	ln -s "$(CURDIR)/skills" "$$tmp/skills"; \
+	ln -s "$(CURDIR)/skills-lock.json" "$$tmp/skills-lock.json"; \
+	trap 'rm -rf "$$tmp_parent"' EXIT INT TERM; \
+	(cd "$$tmp" && npx --yes skills@latest update --project)

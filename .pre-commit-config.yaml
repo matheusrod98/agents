@@ -6,6 +6,7 @@ repos:
         entry: shfmt
         language: system
         types: [shell]
+        exclude: ^skills/
         args: [--write, --indent, "2"]
 
       - id: shellcheck
@@ -13,12 +14,14 @@ repos:
         entry: shellcheck
         language: system
         types: [shell]
+        exclude: ^skills/
 
       - id: prettier
         name: prettier
         entry: prettier
         language: system
         files: \.(json|jsonc|md)$
+        exclude: ^skills/
         args: [--write]
 
       - id: markdownlint
@@ -26,6 +29,7 @@ repos:
         entry: markdownlint-cli2
         language: system
         types: [markdown]
+        exclude: ^skills/
 
       - id: taplo
         name: taplo
