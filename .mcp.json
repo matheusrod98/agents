@@ -9,7 +9,7 @@
       "url": "https://mcp.context7.com/mcp/oauth"
     },
     "drawio": {
-      "command": "/nix/store/79d6qshpp810a5ifva2b0k3nbw12amhi-drawio-mcp-1.5.0/bin/drawio-mcp",
+      "command": "drawio-mcp",
       "type": "stdio"
     },
     "excalidraw": {
@@ -24,7 +24,7 @@
       "args": [
         "--toolsets=default,projects"
       ],
-      "command": "/nix/store/3bpbhjr3ijss6y07n8apf8j7gy338665-github-mcp-server/bin/github-mcp-server",
+      "command": "github-mcp-server",
       "type": "stdio"
     },
     "gitlab": {
@@ -32,28 +32,26 @@
       "url": "https://gitlab.com/api/v4/mcp"
     },
     "grafana": {
-      "command": "/nix/store/lnxnsm7nynic53p48xwdhpzcsdvlaivl-mcp-grafana-1.0.0/bin/mcp-grafana",
+      "command": "mcp-grafana",
       "type": "stdio"
     },
     "open-computer-use": {
-      "command": "/home/matheus/.local/bin/open-computer-use",
+      "command": "open-computer-use",
       "args": [
         "mcp"
       ],
       "type": "stdio"
     },
     "kubernetes": {
-      "command": "/nix/store/53jh7xf0pgdlab6pgj3fjq37z17mm7kb-kubernetes-mcp-server-0.0.65/bin/kubernetes-mcp-server",
+      "command": "kubernetes-mcp-server",
       "type": "stdio"
     },
     "playwright": {
       "args": [
         "--browser",
-        "chromium",
-        "--executable-path",
-        "/nix/store/ay3ysj704nb2qqz9piv0n2892sfbcpgb-chromium-151.0.7922.71/bin/chromium"
+        "chromium"
       ],
-      "command": "/nix/store/h6wzwdqc2xj6czaqfkv4jxa4589skfjb-playwright-mcp-0.0.76/bin/playwright-mcp",
+      "command": "playwright-mcp",
       "type": "stdio"
     }
   }

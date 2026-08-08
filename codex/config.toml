@@ -11,5 +11,5 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [mcp_servers."open-computer-use"]
-command = "/home/matheus/.local/bin/open-computer-use"
+command = "open-computer-use"
 args = ["mcp"]

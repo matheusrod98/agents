@@ -11,7 +11,7 @@
   "mcpServers": {
     "open-computer-use": {
       "type": "stdio",
-      "command": "/home/matheus/.local/bin/open-computer-use",
+      "command": "open-computer-use",
       "args": [
         "mcp"
       ]

@@ -10,7 +10,7 @@
     "open-computer-use": {
       "type": "local",
       "command": [
-        "/home/matheus/.local/bin/open-computer-use",
+        "open-computer-use",
         "mcp"
       ],
       "enabled": true
