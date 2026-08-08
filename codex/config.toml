@@ -7,6 +7,9 @@ vim_mode_default = true
 [projects."/home/matheus/.agents"]
 trust_level = "trusted"
 
+[projects."/home/matheus/Work/tupi-fintech/repos"]
+trust_level = "trusted"
+
 [mcp_servers."open-computer-use"]
 command = "/home/matheus/.local/bin/open-computer-use"
 args = ["mcp"]
