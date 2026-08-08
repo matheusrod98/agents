@@ -48,16 +48,17 @@ directly when only the machine runtime has changed.
 
 ### Make targets
 
-| target               | action                                                                                           |
-| -------------------- | ------------------------------------------------------------------------------------------------ |
-| `make`               | install everything below, then run `doctor`                                                      |
-| `make doctor`        | verify runtime executables                                                                       |
-| `make mcp`           | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                |
-| `make pi`            | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                    |
-| `make claude-code`   | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`)                |
-| `make opencode`      | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`) |
-| `make codex`         | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`)                                       |
-| `make skills:update` | refresh skills managed by `skills.sh`                                                            |
+| target                    | action                                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `make`                    | install everything below, then run `doctor`                                                      |
+| `make pre-commit:install` | install the repository's Git pre-commit hook                                                     |
+| `make doctor`             | verify runtime executables                                                                       |
+| `make mcp`                | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                |
+| `make pi`                 | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                    |
+| `make claude-code`        | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`)                |
+| `make opencode`           | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`) |
+| `make codex`              | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`)                                       |
+| `make skills:update`      | refresh skills managed by `skills.sh`                                                            |
 
 Each Pi resource also installs individually — `pi:settings`, `pi:extensions`,
 `pi:prompts`, `pi:themes`, `pi:skills`, `pi:web-search` — and

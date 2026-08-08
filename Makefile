@@ -5,9 +5,10 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode codex doctor skills\:update
+.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update
 
 all: mcp pi claude-code opencode codex
+	@$(MAKE) pre-commit:install
 	@$(MAKE) doctor
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
@@ -80,6 +81,9 @@ codex\:skills:
 
 doctor:
 	@"$(CURDIR)/doctor.sh"
+
+pre-commit\:install:
+	@pre-commit install
 
 skills\:update:
 	@set -eu; \

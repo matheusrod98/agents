@@ -15,7 +15,8 @@ than editing files under agent config directories directly.
 
 ## Validation
 
-- Run `make` after configuration changes; it installs links and runs `doctor.sh`.
+- Run `make` after configuration changes; it installs links, the pre-commit hook,
+  and runs `doctor.sh`.
 - Run `make doctor` when only the machine runtime changed.
 - Keep `doctor.sh` synchronized with local stdio MCP servers and their runtime
   dependencies whenever the MCP registry changes.
