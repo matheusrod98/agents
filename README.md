@@ -50,7 +50,7 @@ directly when only the machine runtime has changed.
 
 | target                    | action                                                                                           |
 | ------------------------- | ------------------------------------------------------------------------------------------------ |
-| `make`                    | install everything below, then run `doctor`                                                      |
+| `make`                    | run `doctor`, install everything below, then install the Git hook                                |
 | `make pre-commit:install` | install the repository's Git pre-commit hook                                                     |
 | `make doctor`             | verify runtime executables                                                                       |
 | `make mcp`                | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                |
