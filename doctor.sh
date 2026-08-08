@@ -30,8 +30,7 @@ for command in \
   open-computer-use \
   kubernetes-mcp-server \
   playwright-mcp \
-  chromium
-do
+  chromium; do
   check_command "$command"
 done
 

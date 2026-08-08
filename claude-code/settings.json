@@ -12,9 +12,7 @@
     "open-computer-use": {
       "type": "stdio",
       "command": "open-computer-use",
-      "args": [
-        "mcp"
-      ]
+      "args": ["mcp"]
     }
   }
 }

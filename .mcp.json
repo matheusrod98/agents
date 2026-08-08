@@ -21,9 +21,7 @@
       "url": "https://mcp.figma.com/mcp"
     },
     "github": {
-      "args": [
-        "--toolsets=default,projects"
-      ],
+      "args": ["--toolsets=default,projects"],
       "command": "github-mcp-server",
       "type": "stdio"
     },
@@ -37,9 +35,7 @@
     },
     "open-computer-use": {
       "command": "open-computer-use",
-      "args": [
-        "mcp"
-      ],
+      "args": ["mcp"],
       "type": "stdio"
     },
     "kubernetes": {
@@ -47,10 +43,7 @@
       "type": "stdio"
     },
     "playwright": {
-      "args": [
-        "--browser",
-        "chromium"
-      ],
+      "args": ["--browser", "chromium"],
       "command": "playwright-mcp",
       "type": "stdio"
     }

@@ -24,6 +24,9 @@ cd ~/.agents
 make
 ```
 
+The repository's pre-commit hooks use formatting and linting tools supplied by
+the machine configuration. Enable them once with `pre-commit install`.
+
 The default target symlinks everything in: the MCP registry
 (`~/.config/mcp/mcp.json`, or `$XDG_CONFIG_HOME/mcp/mcp.json`), the Pi
 resources (`~/.pi/agent`), and the per-agent configs below. Subsequent pulls
@@ -45,15 +48,15 @@ directly when only the machine runtime has changed.
 
 ### Make targets
 
-| target | action |
-|---|---|
-| `make` | install everything below, then run `doctor` |
-| `make doctor` | verify runtime executables |
-| `make mcp` | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json` |
-| `make pi` | settings, extensions, prompts, themes, skills → `~/.pi/agent` |
-| `make claude-code` | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`) |
-| `make opencode` | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`) |
-| `make codex` | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`) |
+| target             | action                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `make`             | install everything below, then run `doctor`                                                      |
+| `make doctor`      | verify runtime executables                                                                       |
+| `make mcp`         | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                |
+| `make pi`          | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                    |
+| `make claude-code` | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`)                |
+| `make opencode`    | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`) |
+| `make codex`       | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`)                                       |
 
 Each Pi resource also installs individually — `pi:settings`, `pi:extensions`,
 `pi:prompts`, `pi:themes`, `pi:skills`, `pi:web-search` — and
