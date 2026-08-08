@@ -40,7 +40,7 @@ mcp:
 	mkdir -p "$(dir $(MCP_CONFIG))"
 	ln -sfn "$(AGENTS)/.mcp.json" "$(MCP_CONFIG)"
 
-claude-code: claude-code\:skills claude-code\:settings
+claude-code: claude-code\:skills claude-code\:settings claude-code\:claude-md
 
 claude-code\:skills:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
@@ -49,6 +49,10 @@ claude-code\:skills:
 claude-code\:settings:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
 	ln -sfn "$(AGENTS)/claude-code/settings.json" "$(CLAUDE_CONFIG_DIR)/settings.json"
+
+claude-code\:claude-md:
+	mkdir -p "$(CLAUDE_CONFIG_DIR)"
+	ln -sfn "$(AGENTS)/claude-code/CLAUDE.md" "$(CLAUDE_CONFIG_DIR)/CLAUDE.md"
 
 opencode: opencode\:config opencode\:tui opencode\:skills
 

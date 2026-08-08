@@ -46,11 +46,11 @@ make pi          # install settings, extensions, prompts, themes, and skills (no
 make pi:settings # install an individual Pi resource (also: extensions, prompts, themes, skills)
 make mcp         # install the shared MCP registry
 make codex       # link Codex's config.toml
-make claude-code # link claude-code's skills and global settings.json
+make claude-code # link claude-code's skills, global settings.json, and CLAUDE.md
 make opencode    # link opencode's config, tui config, and skills
 ```
 
-Pi resources are linked into `~/.pi/agent`. The MCP registry is linked to `$XDG_CONFIG_HOME/mcp/mcp.json`, or `~/.config/mcp/mcp.json` when `XDG_CONFIG_HOME` is unset. Claude Code's global `settings.json` is linked from `claude-code/settings.json` to `$CLAUDE_CONFIG_DIR/settings.json` (default `~/.claude/settings.json`); skills are linked to `$CLAUDE_CONFIG_DIR/skills`. opencode's `opencode.json` and `tui.json` are linked from `opencode/` into `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`); skills are linked per-skill into `$XDG_CONFIG_HOME/opencode/skills`; opencode also auto-loads `~/.agents/skills` on its own. Codex's `config.toml` is linked from `codex/config.toml` to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`); skills are linked to `$CODEX_HOME/skills`.
+Pi resources are linked into `~/.pi/agent`. The MCP registry is linked to `$XDG_CONFIG_HOME/mcp/mcp.json`, or `~/.config/mcp/mcp.json` when `XDG_CONFIG_HOME` is unset. Claude Code's global `settings.json` is linked from `claude-code/settings.json` to `$CLAUDE_CONFIG_DIR/settings.json` (default `~/.claude/settings.json`); its global `CLAUDE.md` is linked the same way from `claude-code/CLAUDE.md`; skills are linked to `$CLAUDE_CONFIG_DIR/skills`. opencode's `opencode.json` and `tui.json` are linked from `opencode/` into `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`); skills are linked per-skill into `$XDG_CONFIG_HOME/opencode/skills`; opencode also auto-loads `~/.agents/skills` on its own. Codex's `config.toml` is linked from `codex/config.toml` to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`); skills are linked to `$CODEX_HOME/skills`.
 
 ## Open Computer Use
 
