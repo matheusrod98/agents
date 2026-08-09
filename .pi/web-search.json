@@ -1,4 +1,4 @@
 {
-	"workflow": "auto-summary",
-	"summaryModel": "opencode/deepseek-v4-flash-free:max"
+  "workflow": "auto-summary",
+  "summaryModel": "opencode/deepseek-v4-flash-free:high"
 }
