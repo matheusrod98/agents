@@ -5,7 +5,13 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update
+.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update skills\:install
+
+# Catch-all so positional skill arguments passed to `make skills:install
+# <skill>` are not treated as targets to build. Only fires for goals with no
+# rule at all; every real target below takes precedence.
+.DEFAULT:
+	@:
 
 all: doctor
 	@$(MAKE) mcp pi claude-code opencode codex
@@ -94,3 +100,44 @@ skills\:update:
 	ln -s "$(CURDIR)/skills-lock.json" "$$tmp/skills-lock.json"; \
 	trap 'rm -rf "$$tmp_parent"' EXIT INT TERM; \
 	(cd "$$tmp" && npx --yes skills@latest update --project)
+
+# Install new skills from skills.sh into skills/ and record them in
+# skills-lock.json. Accepts package specs and skills.sh URLs, e.g.
+#   make skills:install anthropics/skills@frontend-design
+#   make skills:install https://www.skills.sh/ogulcancelik/herdr/herdr
+# The skills CLI runs inside a throwaway project directory, so it never
+# touches global agent configs (~/.claude, ~/.pi/agent, per-agent symlinks,
+# nested .agents dirs). Only the skill files land in skills/ and the lock
+# entry is merged into skills-lock.json.
+skills\:install:
+	@set -eu; \
+	if [ -z "$(filter-out skills:install,$(MAKECMDGOALS))" ]; then \
+		echo "usage: make skills:install <owner/repo@skill | skills.sh URL>"; \
+		exit 2; \
+	fi ; \
+	for pkg in $(filter-out skills:install,$(MAKECMDGOALS)); do \
+		norm=$$(printf '%s' "$$pkg" | sed -E 's|^https?://(www\.)?skills\.sh/||; s|^([^/@]+)/([^/@]+)/([^/@]+)$$|\1/\2@\3|'); \
+		if [ -z "$$norm" ]; then \
+			echo "usage: make skills:install <owner/repo@skill | skills.sh URL>"; \
+			exit 2; \
+		fi; \
+		tmp=$$(mktemp -d); \
+		trap 'rm -rf "$$tmp"' EXIT INT TERM; \
+		echo "skills: installing $$norm"; \
+		(cd "$$tmp" && npx --yes skills@latest add "$$norm" -y --project >/dev/null); \
+		for d in "$$tmp"/.agents/skills/*/; do \
+			[ -d "$$d" ] || continue; \
+			name=$$(basename "$$d"); \
+			rm -rf "$(CURDIR)/skills/$$name"; \
+			cp -R "$$d" "$(CURDIR)/skills/"; \
+			echo "skills: installed $$name -> skills/$$name"; \
+		done ; \
+		if [ -f "$$tmp/skills-lock.json" ]; then \
+			jq --slurpfile n "$$tmp/skills-lock.json" '.skills = ((.skills // {}) + ($$n[0].skills // {})) | .skills |= (to_entries | sort_by(.key) | from_entries)' "$(CURDIR)/skills-lock.json" > "$$tmp/skills-lock.merged" \
+			&& mv "$$tmp/skills-lock.merged" "$(CURDIR)/skills-lock.json"; \
+			echo "skills: lock updated"; \
+		else \
+			echo "skills: warning: no skills-lock.json produced for $$norm"; \
+		fi ; \
+		trap - EXIT INT TERM; rm -rf "$$tmp"; \
+	done

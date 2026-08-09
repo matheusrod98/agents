@@ -48,17 +48,18 @@ directly when only the machine runtime has changed.
 
 ### Make targets
 
-| target                    | action                                                                                           |
-| ------------------------- | ------------------------------------------------------------------------------------------------ |
-| `make`                    | run `doctor`, install everything below, then install the Git hook                                |
-| `make pre-commit:install` | install the repository's Git pre-commit hook                                                     |
-| `make doctor`             | verify runtime executables                                                                       |
-| `make mcp`                | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                |
-| `make pi`                 | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                    |
-| `make claude-code`        | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`)                |
-| `make opencode`           | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`) |
-| `make codex`              | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`)                                       |
-| `make skills:update`      | refresh skills managed by `skills.sh`                                                            |
+| target                    | action                                                                                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `make`                    | run `doctor`, install everything below, then install the Git hook                                                                                                                          |
+| `make pre-commit:install` | install the repository's Git pre-commit hook                                                                                                                                               |
+| `make doctor`             | verify runtime executables                                                                                                                                                                 |
+| `make mcp`                | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                                                                                                          |
+| `make pi`                 | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                                                                                                              |
+| `make claude-code`        | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`)                                                                                                          |
+| `make opencode`           | `opencode.json`, `tui.json`, skills → `$XDG_CONFIG_HOME/opencode` (default `~/.config/opencode`)                                                                                           |
+| `make codex`              | `config.toml`, skills → `$CODEX_HOME` (default `~/.codex`)                                                                                                                                 |
+| `make skills:update`      | refresh skills managed by `skills.sh`                                                                                                                                                      |
+| `make skills:install`     | add a skill from `skills.sh` (accepts a package spec or URL, e.g. `make skills:install anthropics/skills@frontend-design` or `make skills:install https://www.skills.sh/owner/repo/skill`) |
 
 Each Pi resource also installs individually — `pi:settings`, `pi:extensions`,
 `pi:prompts`, `pi:themes`, `pi:skills`, `pi:web-search` — and
@@ -68,3 +69,8 @@ each agent. The `pi:skills` link keeps every Pi resource under one root.
 `make skills:update` refreshes skills with entries in `skills-lock.json` and
 prompts before removing skills deleted upstream. Local skills without an
 upstream source entry remain under this repository's control.
+
+`make skills:install <package|URL>` installs a new skill through the `skills`
+CLI inside a throwaway project directory, so only `skills/<name>/` and the
+lock entry in `skills-lock.json` are touched — never global agent configs or
+per-agent symlink directories.
