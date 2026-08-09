@@ -3,9 +3,59 @@
   "model": "opencode/deepseek-v4-flash-free",
   "enabled_providers": ["opencode", "opencode-go", "openai"],
   "mcp": {
+    "aws": {
+      "type": "remote",
+      "url": "https://aws-mcp.us-east-1.api.aws/mcp",
+      "enabled": true
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp/oauth",
+      "enabled": true
+    },
+    "drawio": {
+      "type": "local",
+      "command": ["drawio-mcp"],
+      "enabled": true
+    },
+    "excalidraw": {
+      "type": "remote",
+      "url": "https://mcp.excalidraw.com/mcp",
+      "enabled": true
+    },
+    "figma": {
+      "type": "remote",
+      "url": "https://mcp.figma.com/mcp",
+      "enabled": true
+    },
+    "github": {
+      "type": "local",
+      "command": ["github-mcp-server", "--toolsets=default,projects"],
+      "enabled": true
+    },
+    "gitlab": {
+      "type": "remote",
+      "url": "https://gitlab.com/api/v4/mcp",
+      "enabled": true
+    },
+    "grafana": {
+      "type": "local",
+      "command": ["mcp-grafana"],
+      "enabled": true
+    },
     "open-computer-use": {
       "type": "local",
       "command": ["open-computer-use", "mcp"],
+      "enabled": true
+    },
+    "kubernetes": {
+      "type": "local",
+      "command": ["kubernetes-mcp-server"],
+      "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["playwright-mcp", "--browser", "chromium"],
       "enabled": true
     },
     "todoist": {
