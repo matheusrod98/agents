@@ -1,5 +1,6 @@
 model = "gpt-5.6-luna"
 model_reasoning_effort = "xhigh"
+approval_policy = "never"
 
 [tui]
 vim_mode_default = true
@@ -16,6 +17,38 @@ args = ["mcp"]
 
 [mcp_servers."todoist"]
 url = "https://ai.todoist.net/mcp"
+
+[mcp_servers."aws"]
+url = "https://aws-mcp.us-east-1.api.aws/mcp"
+
+[mcp_servers."context7"]
+url = "https://mcp.context7.com/mcp/oauth"
+
+[mcp_servers."drawio"]
+command = "drawio-mcp"
+
+[mcp_servers."excalidraw"]
+url = "https://mcp.excalidraw.com/mcp"
+
+[mcp_servers."figma"]
+url = "https://mcp.figma.com/mcp"
+
+[mcp_servers."github"]
+command = "github-mcp-server"
+args = ["--toolsets=default,projects"]
+
+[mcp_servers."gitlab"]
+url = "https://gitlab.com/api/v4/mcp"
+
+[mcp_servers."grafana"]
+command = "mcp-grafana"
+
+[mcp_servers."kubernetes"]
+command = "kubernetes-mcp-server"
+
+[mcp_servers."playwright"]
+command = "playwright-mcp"
+args = ["--browser", "chromium"]
 
 # Git interceptor belt (B1): pin git editor env for every subprocess codex
 # spawns, as a fallback behind the PreToolUse hook rewrite (codex/git-guard.cjs).
