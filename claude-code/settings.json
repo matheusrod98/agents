@@ -1,18 +1,32 @@
 {
-  "permissions": {
-    "defaultMode": "auto"
-  },
+  "editorMode": "vim",
   "enabledPlugins": {
-    "playwright@claude-plugins-official": true,
     "atlassian@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
     "slack@claude-plugins-official": true
   },
-  "editorMode": "vim",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/home/matheus/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  },
   "mcpServers": {
     "open-computer-use": {
-      "type": "stdio",
+      "args": ["mcp"],
       "command": "open-computer-use",
-      "args": ["mcp"]
+      "type": "stdio"
     }
+  },
+  "permissions": {
+    "defaultMode": "auto"
   }
 }

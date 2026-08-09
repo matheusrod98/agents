@@ -6,7 +6,7 @@
     "opencode/deepseek-v4-flash-free:max",
     "opencode-go/gpt-5.6-luna:xhigh"
   ],
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
@@ -45,5 +45,8 @@
         "thinking": "xhigh"
       }
     }
-  }
+  },
+  "defaultProvider": "opencode",
+  "defaultModel": "deepseek-v4-flash-free",
+  "defaultThinkingLevel": "max"
 }
