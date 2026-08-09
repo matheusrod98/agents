@@ -1,5 +1,6 @@
 PI := $(HOME)/.pi/agent
 CLAUDE_CONFIG_DIR ?= $(HOME)/.claude
+CLAUDE_USER_CONFIG ?= $(HOME)/.claude.json
 CODEX_HOME ?= $(HOME)/.codex
 XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
@@ -47,7 +48,7 @@ mcp:
 	mkdir -p "$(dir $(MCP_CONFIG))"
 	ln -sfn "$(CURDIR)/.mcp.json" "$(MCP_CONFIG)"
 
-claude-code: claude-code\:skills claude-code\:settings claude-code\:claude-md
+claude-code: claude-code\:skills claude-code\:settings claude-code\:claude-md claude-code\:mcp
 
 claude-code\:skills:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
@@ -60,6 +61,12 @@ claude-code\:settings:
 claude-code\:claude-md:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
 	ln -sfn "$(CURDIR)/claude-code/CLAUDE.md" "$(CLAUDE_CONFIG_DIR)/CLAUDE.md"
+
+# Claude Code has no settings.json key for MCP servers; user-scope
+# registration lives in ~/.claude.json, which also holds OAuth/session state
+# we must not clobber. See scripts/claude-code-mcp-sync.sh.
+claude-code\:mcp:
+	@"$(CURDIR)/scripts/claude-code-mcp-sync.sh" "$(CURDIR)/.mcp.json" "$(CLAUDE_USER_CONFIG)"
 
 opencode: opencode\:config opencode\:tui opencode\:skills
 
@@ -86,58 +93,18 @@ codex\:skills:
 	ln -sfn $(CURDIR)/skills/* "$(CODEX_HOME)/skills/"
 
 doctor:
-	@"$(CURDIR)/doctor.sh"
+	@"$(CURDIR)/scripts/doctor.sh"
 
 pre-commit\:install:
 	@pre-commit install
 
 skills\:update:
-	@set -eu; \
-	tmp_parent=$$(mktemp -d); \
-	tmp="$$tmp_parent/.agents"; \
-	mkdir "$$tmp"; \
-	ln -s "$(CURDIR)/skills" "$$tmp/skills"; \
-	ln -s "$(CURDIR)/skills-lock.json" "$$tmp/skills-lock.json"; \
-	trap 'rm -rf "$$tmp_parent"' EXIT INT TERM; \
-	(cd "$$tmp" && npx --yes skills@latest update --project)
+	@"$(CURDIR)/scripts/skills-update.sh" "$(CURDIR)"
 
 # Install new skills from skills.sh into skills/ and record them in
 # skills-lock.json. Accepts package specs and skills.sh URLs, e.g.
 #   make skills:install anthropics/skills@frontend-design
 #   make skills:install https://www.skills.sh/ogulcancelik/herdr/herdr
-# The skills CLI runs inside a throwaway project directory, so it never
-# touches global agent configs (~/.claude, ~/.pi/agent, per-agent symlinks,
-# nested .agents dirs). Only the skill files land in skills/ and the lock
-# entry is merged into skills-lock.json.
+# See scripts/skills-install.sh.
 skills\:install:
-	@set -eu; \
-	if [ -z "$(filter-out skills:install,$(MAKECMDGOALS))" ]; then \
-		echo "usage: make skills:install <owner/repo@skill | skills.sh URL>"; \
-		exit 2; \
-	fi ; \
-	for pkg in $(filter-out skills:install,$(MAKECMDGOALS)); do \
-		norm=$$(printf '%s' "$$pkg" | sed -E 's|^https?://(www\.)?skills\.sh/||; s|^([^/@]+)/([^/@]+)/([^/@]+)$$|\1/\2@\3|'); \
-		if [ -z "$$norm" ]; then \
-			echo "usage: make skills:install <owner/repo@skill | skills.sh URL>"; \
-			exit 2; \
-		fi; \
-		tmp=$$(mktemp -d); \
-		trap 'rm -rf "$$tmp"' EXIT INT TERM; \
-		echo "skills: installing $$norm"; \
-		(cd "$$tmp" && npx --yes skills@latest add "$$norm" -y --project >/dev/null); \
-		for d in "$$tmp"/.agents/skills/*/; do \
-			[ -d "$$d" ] || continue; \
-			name=$$(basename "$$d"); \
-			rm -rf "$(CURDIR)/skills/$$name"; \
-			cp -R "$$d" "$(CURDIR)/skills/"; \
-			echo "skills: installed $$name -> skills/$$name"; \
-		done ; \
-		if [ -f "$$tmp/skills-lock.json" ]; then \
-			jq --slurpfile n "$$tmp/skills-lock.json" '.skills = ((.skills // {}) + ($$n[0].skills // {})) | .skills |= (to_entries | sort_by(.key) | from_entries)' "$(CURDIR)/skills-lock.json" > "$$tmp/skills-lock.merged" \
-			&& mv "$$tmp/skills-lock.merged" "$(CURDIR)/skills-lock.json"; \
-			echo "skills: lock updated"; \
-		else \
-			echo "skills: warning: no skills-lock.json produced for $$norm"; \
-		fi ; \
-		trap - EXIT INT TERM; rm -rf "$$tmp"; \
-	done
+	@"$(CURDIR)/scripts/skills-install.sh" "$(CURDIR)" $(filter-out skills:install,$(MAKECMDGOALS))

@@ -16,10 +16,10 @@ than editing files under agent config directories directly.
 ## Validation
 
 - Run `make` after configuration changes; it installs links, the pre-commit hook,
-  and runs `doctor.sh`.
+  and runs `scripts/doctor.sh`.
 - Run `make doctor` when only the machine runtime changed.
-- Keep `doctor.sh` synchronized with local stdio MCP servers and their runtime
-  dependencies whenever the MCP registry changes.
+- Keep `scripts/doctor.sh` synchronized with local stdio MCP servers and their
+  runtime dependencies whenever the MCP registry changes.
 - Playwright MCP requires `PLAYWRIGHT_MCP_EXECUTABLE_PATH` in the environment.
 - Read `README.md` when changing setup, install targets, or the runtime contract.
 

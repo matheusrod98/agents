@@ -2,7 +2,6 @@
   "editorMode": "vim",
   "enabledPlugins": {
     "atlassian@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
     "slack@claude-plugins-official": true
   },
   "env": {
@@ -36,13 +35,6 @@
         "matcher": "*"
       }
     ]
-  },
-  "mcpServers": {
-    "open-computer-use": {
-      "args": ["mcp"],
-      "command": "open-computer-use",
-      "type": "stdio"
-    }
   },
   "permissions": {
     "defaultMode": "auto"
