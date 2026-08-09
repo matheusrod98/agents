@@ -22,19 +22,19 @@ pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
 
 pi\:settings:
 	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/.pi/agent/settings.json" "$(PI)/settings.json"
+	ln -sfn "$(CURDIR)/pi/agent/settings.json" "$(PI)/settings.json"
 
 pi\:extensions:
 	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/.pi/agent/extensions" "$(PI)/extensions"
+	ln -sfn "$(CURDIR)/pi/agent/extensions" "$(PI)/extensions"
 
 pi\:prompts:
 	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/.pi/agent/prompts" "$(PI)/prompts"
+	ln -sfn "$(CURDIR)/pi/agent/prompts" "$(PI)/prompts"
 
 pi\:themes:
 	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/.pi/agent/themes" "$(PI)/themes"
+	ln -sfn "$(CURDIR)/pi/agent/themes" "$(PI)/themes"
 
 pi\:skills:
 	mkdir -p "$(PI)"
@@ -42,7 +42,7 @@ pi\:skills:
 
 pi\:web-search:
 	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/.pi/web-search.json" "$(PI)/web-search.json"
+	ln -sfn "$(CURDIR)/pi/web-search.json" "$(PI)/web-search.json"
 
 mcp:
 	mkdir -p "$(dir $(MCP_CONFIG))"

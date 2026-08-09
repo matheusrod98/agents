@@ -9,7 +9,7 @@ git-iterated and symlinked into place by `make`.
 - `skills/` — the skill collection, each with its own `SKILL.md`;
 - `claude-code/`, `codex/`, `opencode/` — per-agent config files
 - `claude-code/`, `codex/`, `opencode/` — per-agent config files; each agent also carries its own git guard hook (`claude-code/git-guard.cjs`, `codex/git-guard.cjs`, `opencode/git-interceptor.ts`, ported from pi's `git-interceptor` extension)
-- `.pi/` — Pi settings, extensions, prompts, themes, web-search
+- `pi/` — Pi settings, extensions, prompts, themes, web-search
 - `.mcp.json` — the shared MCP registry
 - `Makefile` — the installer entrypoint
 - `scripts/` — standalone scripts invoked by `make` targets: `doctor.sh` (runtime checks), `claude-code-mcp-sync.sh` (merges the MCP registry into `~/.claude.json`), `skills-update.sh` / `skills-install.sh` (the `skills:*` targets)
