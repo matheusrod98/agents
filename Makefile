@@ -62,9 +62,8 @@ claude-code\:claude-md:
 	mkdir -p "$(CLAUDE_CONFIG_DIR)"
 	ln -sfn "$(CURDIR)/claude-code/CLAUDE.md" "$(CLAUDE_CONFIG_DIR)/CLAUDE.md"
 
-# Claude Code has no settings.json key for MCP servers; user-scope
-# registration lives in ~/.claude.json, which also holds OAuth/session state
-# we must not clobber. See scripts/claude-code-mcp-sync.sh.
+# ~/.claude.json can't be symlinked like the rest of this repo — see
+# scripts/claude-code-mcp-sync.sh.
 claude-code\:mcp:
 	@"$(CURDIR)/scripts/claude-code-mcp-sync.sh" "$(CURDIR)/.mcp.json" "$(CLAUDE_USER_CONFIG)"
 

@@ -70,14 +70,11 @@ each agent. The `pi:skills` link keeps every Pi resource under one root.
 ### MCP servers
 
 `.mcp.json` is the single MCP registry. Pi reads it via the
-`~/.config/mcp/mcp.json` symlink. Claude Code has no `settings.json` key for
-MCP servers at any scope — user-scope registration actually lives in
-`~/.claude.json`, which also holds OAuth tokens and session state, so it can't
-be symlinked wholesale like the rest of this repo's config. `make
-claude-code:mcp` instead merges just the registry's `mcpServers` key into it
-in place with `jq`, leaving everything else in that file untouched. Claude
-Code plugins (`enabledPlugins`) stay hand-declared in `claude-code/settings.json`
-since they aren't part of the shared registry.
+`~/.config/mcp/mcp.json` symlink; `make claude-code:mcp` merges it into
+Claude Code's user-scope config instead (see `scripts/claude-code-mcp-sync.sh`
+for why it can't just be symlinked). Claude Code plugins (`enabledPlugins`)
+stay hand-declared in `claude-code/settings.json` since they aren't part of
+the shared registry.
 
 This repo's own `.mcp.json` is deliberately disabled as a _project_-scoped MCP
 source when working inside this repo (`.claude/settings.local.json` sets

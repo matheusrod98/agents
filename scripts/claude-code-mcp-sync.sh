@@ -15,5 +15,6 @@ if [ ! -f "$target" ]; then
 fi
 
 tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT INT TERM
 jq --slurpfile reg "$registry" '.mcpServers = $reg[0].mcpServers' "$target" >"$tmp"
 mv "$tmp" "$target"
