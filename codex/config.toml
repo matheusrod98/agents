@@ -14,5 +14,11 @@ trust_level = "trusted"
 command = "open-computer-use"
 args = ["mcp"]
 
+# Git interceptor belt (B1): pin git editor env for every subprocess codex
+# spawns, as a fallback behind the PreToolUse hook rewrite (codex/git-guard.cjs).
+[shell_environment_policy]
+inherit = "all"
+set = { GIT_EDITOR = "true", GIT_SEQUENCE_EDITOR = "true", GIT_MERGE_AUTOEDIT = "no" }
+
 [features]
 hooks = true

@@ -1,5 +1,18 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/matheus/.agents/codex/git-guard.cjs",
+            "timeout": 10,
+            "statusMessage": "git-guard: checking command"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

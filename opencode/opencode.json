@@ -8,5 +8,6 @@
       "command": ["open-computer-use", "mcp"],
       "enabled": true
     }
-  }
+  },
+  "plugin": ["/home/matheus/.agents/opencode/git-interceptor.ts"]
 }
