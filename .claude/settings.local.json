@@ -9,6 +9,7 @@
     "gitlab",
     "grafana",
     "kubernetes",
-    "playwright"
+    "playwright",
+    "todoist"
   ]
 }

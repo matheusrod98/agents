@@ -46,6 +46,10 @@
       "args": ["--browser", "chromium"],
       "command": "playwright-mcp",
       "type": "stdio"
+    },
+    "todoist": {
+      "type": "http",
+      "url": "https://ai.todoist.net/mcp"
     }
   }
 }
