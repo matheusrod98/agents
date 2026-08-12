@@ -31,6 +31,9 @@
     },
     "grafana": {
       "command": "mcp-grafana",
+      "env": {
+        "GRAFANA_URL": "https://grafana-dev.tupifintech.com/"
+      },
       "type": "stdio"
     },
     "open-computer-use": {

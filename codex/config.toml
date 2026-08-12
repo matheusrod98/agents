@@ -42,6 +42,7 @@ url = "https://gitlab.com/api/v4/mcp"
 
 [mcp_servers."grafana"]
 command = "mcp-grafana"
+env = { GRAFANA_URL = "https://grafana-dev.tupifintech.com/" }
 
 [mcp_servers."kubernetes"]
 command = "kubernetes-mcp-server"

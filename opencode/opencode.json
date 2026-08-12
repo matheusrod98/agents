@@ -41,6 +41,9 @@
     "grafana": {
       "type": "local",
       "command": ["mcp-grafana"],
+      "environment": {
+        "GRAFANA_URL": "https://grafana-dev.tupifintech.com/"
+      },
       "enabled": true
     },
     "open-computer-use": {
