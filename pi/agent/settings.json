@@ -1,12 +1,13 @@
 {
   "collapseChangelog": true,
   "enabledModels": [
-    "openai-codex/gpt-5.6-terra:high",
+    "opencode-go/deepseek-v4-pro:high",
+    "opencode-go/gpt-5.6-luna:xhigh",
     "openai-codex/gpt-5.6-sol:high",
-    "opencode/deepseek-v4-flash-free:max",
-    "opencode-go/gpt-5.6-luna:xhigh"
+    "openai-codex/gpt-5.6-terra:high",
+    "opencode/deepseek-v4-flash-free:max"
   ],
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
@@ -21,20 +22,20 @@
   "subagents": {
     "agentOverrides": {
       "scout": {
-        "model": "opencode/deepseek-v4-flash-free",
-        "thinking": "high"
+        "model": "opencode-go/gpt-5.6-luna",
+        "thinking": "medium"
       },
       "researcher": {
-        "model": "opencode/deepseek-v4-flash-free",
-        "thinking": "high"
+        "model": "opencode-go/gpt-5.6-luna",
+        "thinking": "medium"
       },
       "worker": {
-        "model": "opencode-go/gpt-5.6-luna",
-        "thinking": "xhigh"
+        "model": "opencode-go/deepseek-v4-pro",
+        "thinking": "high"
       },
       "delegate": {
-        "model": "opencode/deepseek-v4-flash-free",
-        "thinking": "high"
+        "model": "opencode-go/gpt-5.6-luna",
+        "thinking": "xhigh"
       },
       "reviewer": {
         "model": "openai-codex/gpt-5.6-sol",
@@ -46,8 +47,5 @@
       }
     }
   },
-  "defaultProvider": "opencode-go",
-  "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "xhigh",
   "defaultProjectTrust": "always"
 }
