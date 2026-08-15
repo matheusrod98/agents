@@ -1,18 +1,24 @@
 ---
 name: git-worktree
 description: >
-  Create and manage git worktrees with worktrunk (`wt`), never `git worktree`. Load
-  when about to create, switch, merge, or remove worktrees — "make me a worktree",
-  "switch to branch X", "merge branch", "clean up worktrees" — or when the git-branch
-  skill points here. Deep reference: the worktrunk skill.
+  Worktree-first branch development with Worktrunk (`wt`). Load before creating,
+  switching, merging, or deleting a Git branch; making a feature branch; or
+  creating, switching, merging, or removing a worktree. Use this skill whenever
+  branch work is about to begin. Deep reference: the worktrunk skill.
 compatibility: Requires the `wt` CLI (https://worktrunk.dev)
 ---
 
 # Git Worktree
 
-Use **worktrunk** (`wt`) for every worktree operation — never `git worktree`. `wt` keeps worktree path, branch, and hooks aligned: raw `git worktree add` produces non-canonical paths and skips the project's lifecycle hooks (pre-start, post-start, pre-merge...).
+Develop every branch in its own worktree. Keep the main checkout on its default
+branch and use **Worktrunk** (`wt`) for the complete branch and worktree
+lifecycle. `wt` keeps worktree paths, branches, and hooks aligned: raw
+`git worktree add` produces non-canonical paths and skips the project's lifecycle
+hooks (pre-start, post-start, pre-merge...).
 
 ## Core commands
+
+Use these commands for branch and worktree operations:
 
 | Task | Command |
 | --- | --- |
@@ -22,7 +28,7 @@ Use **worktrunk** (`wt`) for every worktree operation — never `git worktree`. 
 | Remove a worktree (deletes the branch if merged) | `wt remove <branch>` |
 | List worktrees | `wt list` |
 
-Work inside the worktree, not the main checkout: after `wt switch --create`, the new branch's directory is the working directory — confirm with `wt list` if unsure.
+Work inside the feature worktree, not the main checkout: after `wt switch --create`, the new branch's directory is the working directory — confirm with `wt list` if unsure. Complete the branch step only after the current directory is the feature worktree.
 
 ## When a command asks for approval
 
