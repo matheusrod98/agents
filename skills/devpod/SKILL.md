@@ -1,6 +1,12 @@
 ---
 name: devpod
-description: Use devpod, not the devcontainer CLI. Whenever you are about to run devcontainer-cli or the `devcontainer` binary — up, build, exec, stop, status — or to work on a devcontainer.json / .devcontainer dev-container setup (create, edit, build, run, even when the user names no tool), use devpod instead: it reads the same devcontainer.json and covers every operation.
+description: >-
+  Use devpod, not the devcontainer CLI. Whenever you are about to run
+  devcontainer-cli or the `devcontainer` binary — up, build, exec, stop,
+  status — or to work on a devcontainer.json / .devcontainer dev-container
+  setup (create, edit, build, run, even when the user names no tool), use
+  devpod instead: it reads the same devcontainer.json and covers every
+  operation.
 ---
 
 # Devpod
