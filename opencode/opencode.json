@@ -67,5 +67,5 @@
       "enabled": true
     }
   },
-  "plugin": ["/home/matheus/.agents/opencode/git-interceptor.ts"]
+  "plugin": ["/home/matheus/.agents/opencode/extensions/git-guard/index.ts"]
 }

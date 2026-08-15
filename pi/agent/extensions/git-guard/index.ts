@@ -10,10 +10,19 @@
  * 2. Hook bypass prevention — Blocks any command containing `--no-verify` so
  *    the agent cannot circumvent git hooks (pre-commit, commit-msg, etc.).
  *    The agent should fix hook failures or ask the human for help instead.
+ *
+ * 3. Worktree ownership — Blocks agent-issued branch switching and worktree
+ *    mutations. Those operations belong to host-side Worktrunk.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const { blockedGitOperation } = require("./policy.cjs") as {
+	blockedGitOperation(command: string): string | null;
+};
 
 const GIT_ENV_PREFIX =
 	"export GIT_EDITOR=true GIT_SEQUENCE_EDITOR=true GIT_MERGE_AUTOEDIT=no\n";
@@ -24,6 +33,10 @@ const BLOCK_REASON =
 	"BLOCKED: --no-verify is not allowed. Git hooks exist for a reason. " +
 	"Do not attempt to bypass them. Instead: fix the underlying issue that " +
 	"is causing the hook to fail, or ask the user for help.";
+const WORKTRUNK_BLOCK_REASON =
+	"BLOCKED: Agent-managed branch and worktree changes are disabled. " +
+	"Ask the user to run the operation with host-side Worktrunk (for example, " +
+	"`wt switch --create <branch>`) and continue in the resulting worktree.";
 
 export default function (pi: ExtensionAPI) {
 	pi.on("tool_call", (event) => {
@@ -32,6 +45,10 @@ export default function (pi: ExtensionAPI) {
 
 		if (NO_VERIFY_RE.test(event.input.command)) {
 			return { block: true, reason: BLOCK_REASON };
+		}
+
+		if (blockedGitOperation(event.input.command)) {
+			return { block: true, reason: WORKTRUNK_BLOCK_REASON };
 		}
 
 		event.input.command = GIT_ENV_PREFIX + event.input.command;

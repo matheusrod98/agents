@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node /home/matheus/.agents/codex/git-guard.cjs",
+            "command": "node /home/matheus/.agents/codex/extensions/git-guard/index.cjs",
             "timeout": 10,
             "statusMessage": "git-guard: checking command"
           }

@@ -7,9 +7,8 @@ git-iterated and symlinked into place by `make`.
 ## What's in here
 
 - `skills/` — the skill collection, each with its own `SKILL.md`;
-- `claude-code/`, `codex/`, `opencode/` — per-agent config files
-- `claude-code/`, `codex/`, `opencode/` — per-agent config files; each agent also carries its own git guard hook (`claude-code/git-guard.cjs`, `codex/git-guard.cjs`, `opencode/git-interceptor.ts`, ported from pi's `git-interceptor` extension)
-- `pi/` — Pi settings, extensions, prompts, themes, web-search
+- `claude-code/`, `codex/`, `opencode/` — per-agent configuration and extensions;
+- `pi/` — Pi settings, extensions, prompts, themes, and web-search configuration;
 - `.mcp.json` — the shared MCP registry
 - `Makefile` — the installer entrypoint
 - `scripts/` — standalone scripts invoked by `make` targets: `doctor.sh` (runtime checks), `claude-code-mcp-sync.sh` (merges the MCP registry into `~/.claude.json`), `skills-update.sh` / `skills-install.sh` (the `skills:*` targets)
@@ -65,7 +64,8 @@ directly when only the machine runtime has changed.
 Each Pi resource also installs individually — `pi:settings`, `pi:extensions`,
 `pi:prompts`, `pi:themes`, `pi:skills`, `pi:web-search` — and
 `codex:skills` / `claude-code:skills` / `opencode:skills` link skills into
-each agent. The `pi:skills` link keeps every Pi resource under one root.
+each agent. Each coding agent owns its extension implementations under its own
+directory.
 
 ### MCP servers
 

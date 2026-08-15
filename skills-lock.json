@@ -181,6 +181,12 @@
       "skillPath": "skills/engineering/wizard/SKILL.md",
       "computedHash": "2c0d1187398b1b7ebb9902a4c91b24181ee07892f285615b46c59f45e2c4229c"
     },
+    "worktrunk": {
+      "source": "max-sixty/worktrunk",
+      "sourceType": "github",
+      "skillPath": "skills/worktrunk/SKILL.md",
+      "computedHash": "b76a3ec283b0d77a9703aa6826dad1aacf4097f8aa19f345b0db112c74ff930f"
+    },
     "writing-for-agents": {
       "source": "mattpocock/skills",
       "sourceType": "github",

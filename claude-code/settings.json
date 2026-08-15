@@ -1,13 +1,11 @@
 {
-  "editorMode": "vim",
-  "enabledPlugins": {
-    "atlassian@claude-plugins-official": true,
-    "slack@claude-plugins-official": true
-  },
   "env": {
     "GIT_EDITOR": "true",
     "GIT_SEQUENCE_EDITOR": "true",
     "GIT_MERGE_AUTOEDIT": "no"
+  },
+  "permissions": {
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -16,8 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(git *)",
-            "command": "node /home/matheus/.agents/claude-code/git-guard.cjs",
+            "command": "node /home/matheus/.agents/claude-code/extensions/git-guard/index.cjs",
             "timeout": 10
           }
         ]
@@ -25,18 +22,21 @@
     ],
     "SessionStart": [
       {
+        "matcher": "*",
         "hooks": [
           {
+            "type": "command",
             "command": "bash '/home/matheus/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10,
-            "type": "command"
+            "timeout": 10
           }
-        ],
-        "matcher": "*"
+        ]
       }
     ]
   },
-  "permissions": {
-    "defaultMode": "auto"
-  }
+  "enabledPlugins": {
+    "atlassian@claude-plugins-official": true,
+    "slack@claude-plugins-official": true
+  },
+  "editorMode": "vim",
+  "agentPushNotifEnabled": true
 }

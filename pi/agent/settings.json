@@ -6,7 +6,7 @@
     "opencode/deepseek-v4-flash-free:max",
     "opencode-go/gpt-5.6-luna:xhigh"
   ],
-  "hideThinkingBlock": true,
+  "hideThinkingBlock": false,
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
@@ -16,7 +16,7 @@
     "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "quietStartup": false,
-  "lastChangelogVersion": "0.83.0",
+  "lastChangelogVersion": "0.84.2",
   "theme": "dark",
   "subagents": {
     "agentOverrides": {
@@ -46,7 +46,8 @@
       }
     }
   },
-  "defaultProvider": "opencode",
-  "defaultModel": "deepseek-v4-flash-free",
-  "defaultThinkingLevel": "max"
+  "defaultProvider": "opencode-go",
+  "defaultModel": "gpt-5.6-luna",
+  "defaultThinkingLevel": "xhigh",
+  "defaultProjectTrust": "always"
 }
