@@ -12,8 +12,8 @@
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
     "npm:@plannotator/pi-extension",
-    "npm:pi-subagents",
-    "npm:@juicesharp/rpiv-todo",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@tintinweb/pi-tasks",
     "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "quietStartup": false,
