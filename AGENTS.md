@@ -21,6 +21,9 @@ than editing files under agent config directories directly.
 - Keep `scripts/doctor.sh` synchronized with local stdio MCP servers and their
   runtime dependencies whenever the MCP registry changes.
 - Playwright MCP requires `PLAYWRIGHT_MCP_EXECUTABLE_PATH` in the environment.
+- Docker Sandboxes requires the `sbx` CLI on `PATH` (provided by the machine
+  repo); `make doctor` checks it and `scripts/sbx-mcp-sync.sh` mirrors
+  `.mcp.json` into the `sbx mcp` gateway.
 - Read `README.md` when changing setup, install targets, or the runtime contract.
 
 ## Skill Updates

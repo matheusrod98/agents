@@ -40,5 +40,8 @@ else
   fail "PLAYWRIGHT_MCP_EXECUTABLE_PATH"
 fi
 
+printf '\nSandboxes\n'
+check_command sbx
+
 printf '\nSummary: %s failure(s)\n' "$failures"
 test "$failures" -eq 0

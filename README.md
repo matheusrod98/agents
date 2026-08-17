@@ -11,7 +11,7 @@ git-iterated and symlinked into place by `make`.
 - `pi/` — Pi settings, extensions, prompts, themes, and web-search configuration;
 - `.mcp.json` — the shared MCP registry
 - `Makefile` — the installer entrypoint
-- `scripts/` — standalone scripts invoked by `make` targets: `doctor.sh` (runtime checks), `claude-code-mcp-sync.sh` (merges the MCP registry into `~/.claude.json`), `skills-update.sh` / `skills-install.sh` (the `skills:*` targets)
+- `scripts/` — standalone scripts invoked by `make` targets: `doctor.sh` (runtime checks), `claude-code-mcp-sync.sh` (merges the MCP registry into `~/.claude.json`), `sbx-mcp-sync.sh` (mirrors the MCP registry into the Docker Sandboxes gateway), `skills-update.sh` / `skills-install.sh` (the `skills:*` targets)
 
 ## Setup
 
@@ -53,6 +53,7 @@ directly when only the machine runtime has changed.
 | `make`                    | run `doctor`, install everything below, then install the Git hook                                                                                                                          |
 | `make pre-commit:install` | install the repository's Git pre-commit hook                                                                                                                                               |
 | `make doctor`             | verify runtime executables                                                                                                                                                                 |
+| `make sbx-mcp`            | mirror the shared MCP registry into the Docker Sandboxes gateway via `sbx mcp add`                                                                                                         |
 | `make mcp`                | shared registry → `$XDG_CONFIG_HOME/mcp/mcp.json`                                                                                                                                          |
 | `make pi`                 | settings, extensions, prompts, themes, skills → `~/.pi/agent`                                                                                                                              |
 | `make claude-code`        | `settings.json`, `CLAUDE.md`, skills → `$CLAUDE_CONFIG_DIR` (default `~/.claude`); merges the shared MCP registry into `~/.claude.json`                                                    |
@@ -90,3 +91,18 @@ upstream source entry remain under this repository's control.
 CLI inside a throwaway project directory, so only `skills/<name>/` and the
 lock entry in `skills-lock.json` are touched — never global agent configs or
 per-agent symlink directories.
+
+## Docker Sandboxes
+
+The `docker-sandboxes` skill teaches agents to work inside isolated `sbx`
+microVMs (direct vs clone mode, templates/kits, credentials, and the MCP
+gateway). `scripts/sbx-mcp-sync.sh` mirrors this repo's `.mcp.json` into the
+Docker Sandboxes MCP gateway so sandboxed agents get the same servers as host
+agents.
+
+- `make sbx-mcp` registers every server with `sbx mcp add` (requires
+  `sbx login`; OAuth-backed servers open a browser flow on first add).
+- `sbx` is a runtime dependency like the MCP executables: the machine
+  configuration provides it on `PATH`, and `make doctor` checks for it.
+- The `~/.ssh/config` `*.sbx` block is reproduced declaratively in the
+  machine repo — do not run `sbx setup ssh` by hand.

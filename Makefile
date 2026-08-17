@@ -6,7 +6,7 @@ XDG_CONFIG_HOME ?= $(HOME)/.config
 MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
 OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update skills\:install
+.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update skills\:install sbx-mcp
 
 # Catch-all so positional skill arguments passed to `make skills:install
 # <skill>` are not treated as targets to build. Only fires for goals with no
@@ -93,6 +93,9 @@ codex\:skills:
 
 doctor:
 	@"$(CURDIR)/scripts/doctor.sh"
+
+sbx-mcp:
+	@"$(CURDIR)/scripts/sbx-mcp-sync.sh" --apply
 
 pre-commit\:install:
 	@pre-commit install
