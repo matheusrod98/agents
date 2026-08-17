@@ -16,9 +16,9 @@
  *      throwing from "tool.execute.before" aborts the tool call; the model
  *      receives "Tool execution failed: <reason>". Only the deliberate deny
  *      throws — a broken guard must not look like a deny.
- *   B3 (host-controlled worktrees):
- *      branch switching and worktree mutations are redirected to host-side
- *      Worktrunk.
+ *   B3 (Worktrunk-managed worktrees):
+ *      branch switching and worktree mutations are redirected to the
+ *      Worktrunk (`wt`) CLI.
  */
 
 import type { Plugin } from "@opencode-ai/plugin";
@@ -32,7 +32,7 @@ const NO_VERIFY_RE = /--no-verify\b/;
 const BLOCK_REASON =
   "BLOCKED: --no-verify is not allowed. Git hooks exist for a reason. Do not attempt to bypass them. Instead: fix the underlying issue that is causing the hook to fail, or ask the user for help.";
 const WORKTRUNK_BLOCK_REASON =
-  "BLOCKED: Agent-managed branch and worktree changes are disabled. Ask the user to run the operation with host-side Worktrunk (for example, `wt switch --create <branch>`) and continue in the resulting worktree.";
+  "BLOCKED: Git branch and worktree management is disabled. Use Worktrunk (`wt`) instead — run the equivalent command yourself, e.g. `wt switch --create <branch>`. The `wt` CLI is on PATH; do not ask the user to run it.";
 
 export const GitInterceptor: Plugin = async ({ project }) => {
   project.apply({

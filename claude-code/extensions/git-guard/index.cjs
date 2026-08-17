@@ -9,7 +9,7 @@
 //   B2  `--no-verify` (only when the command mentions git) -> deny JSON; the
 //       permissionDecisionReason is shown to Claude.
 //   B3  Agent-issued branch switching and worktree mutations -> deny JSON;
-//       host-side Worktrunk owns those operations.
+//       agent must use Worktrunk (`wt`) instead.
 //
 // Fail open: any error (bad JSON, wrong shape) leaves the tool call untouched.
 
@@ -18,7 +18,7 @@ const NO_VERIFY_RE = /--no-verify\b/;
 const BLOCK_REASON =
   "BLOCKED: --no-verify is not allowed. Git hooks exist for a reason. Do not attempt to bypass them. Instead: fix the underlying issue that is causing the hook to fail, or ask the user for help.";
 const WORKTRUNK_BLOCK_REASON =
-  "BLOCKED: Agent-managed branch and worktree changes are disabled. Ask the user to run the operation with host-side Worktrunk (for example, `wt switch --create <branch>`) and continue in the resulting worktree.";
+  "BLOCKED: Git branch and worktree management is disabled. Use Worktrunk (`wt`) instead — run the equivalent command yourself, e.g. `wt switch --create <branch>`. The `wt` CLI is on PATH; do not ask the user to run it.";
 
 let input = "";
 process.stdin.on("data", (c) => (input += c));
