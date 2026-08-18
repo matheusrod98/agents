@@ -18,7 +18,7 @@ all: doctor
 	@$(MAKE) mcp pi claude-code opencode codex
 	@$(MAKE) pre-commit:install
 
-pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills
+pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills pi\:web-search
 
 pi\:settings:
 	mkdir -p "$(PI)"
@@ -41,8 +41,8 @@ pi\:skills:
 	ln -sfn "$(CURDIR)/skills" "$(PI)/skills"
 
 pi\:web-search:
-	mkdir -p "$(PI)"
-	ln -sfn "$(CURDIR)/pi/web-search.json" "$(PI)/web-search.json"
+	mkdir -p "$(HOME)/.pi"
+	ln -sfn "$(CURDIR)/pi/web-search.json" "$(HOME)/.pi/web-search.json"
 
 mcp:
 	mkdir -p "$(dir $(MCP_CONFIG))"

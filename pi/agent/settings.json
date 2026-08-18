@@ -1,10 +1,10 @@
 {
   "collapseChangelog": true,
   "enabledModels": [
-    "opencode-go/deepseek-v4-pro:high",
-    "opencode-go/gpt-5.6-luna:xhigh",
+    "openai-codex/gpt-5.6-luna:xhigh",
     "openai-codex/gpt-5.6-sol:high",
     "openai-codex/gpt-5.6-terra:high",
+    "opencode-go/deepseek-v4-pro:high",
     "opencode/deepseek-v4-flash-free:max"
   ],
   "hideThinkingBlock": true,
@@ -18,7 +18,7 @@
   ],
   "quietStartup": false,
   "lastChangelogVersion": "0.84.2",
-  "theme": "dark",
+  "theme": "rose-pine",
   "subagents": {
     "agentOverrides": {
       "scout": {
@@ -48,7 +48,7 @@
     }
   },
   "defaultProjectTrust": "always",
-  "defaultProvider": "opencode-go",
-  "defaultModel": "deepseek-v4-pro",
+  "defaultProvider": "opencode",
+  "defaultModel": "deepseek-v4-flash-free",
   "defaultThinkingLevel": "high"
 }
