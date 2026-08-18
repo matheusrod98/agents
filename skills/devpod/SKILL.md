@@ -17,7 +17,7 @@ devpod replaces the devcontainer CLI (`devcontainer-cli`, the `devcontainer` bin
 
 | operation | devcontainer-cli | devpod |
 |---|---|---|
-| create / start a workspace | `devcontainer up --workspace-folder .` | `devpod up .` |
+| create / start a workspace | `devcontainer up --workspace-folder .` | First check `devpod list`/`devpod status`; reuse a running match, otherwise `devpod up .` |
 | run a command in the container | `devcontainer exec --workspace-folder . -- <cmd>` | `devpod ssh <workspace> --command "<cmd>"` |
 | open a shell in the container | `devcontainer exec --workspace-folder . bash` | `devpod ssh <workspace>` |
 | build the dev container image | `devcontainer build --workspace-folder .` | `devpod build . --repository <registry>` |
@@ -27,6 +27,7 @@ devpod replaces the devcontainer CLI (`devcontainer-cli`, the `devcontainer` bin
 
 ## Behaviour notes
 
+- **Check before create**: Before any `devpod up`, run `devpod list` or `devpod status <workspace>` and identify the workspace matching the current project path/name. If it is running, reuse it with `devpod ssh <workspace> --command ...`; do not create another workspace or temporary clone. If it is stopped, `devpod up <workspace>` may restart it. Create a workspace with `devpod up` only when no matching workspace exists, unless the user explicitly requests a separate workspace.
 - **Addressing workspaces**: devpod names a workspace after its folder. Run `devpod up .` / `devpod ssh .` from inside the project, or pass the name. `devpod up <name>` also restarts a stopped workspace — `up` is create-and-start.
 - **Config changes**: after editing `devcontainer.json` or its Dockerfile, reapply with `devpod up <workspace> --recreate`. Use `--reset` for a full rebuild from scratch. Do not delete-and-recreate for config changes.
 - **Provider**: a provider must exist before the first `devpod up`. Check `devpod provider list`; add `devpod provider add docker` only when none is configured.
