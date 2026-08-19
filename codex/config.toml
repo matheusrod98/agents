@@ -18,6 +18,9 @@ trust_level = "trusted"
 [projects."/home/matheus"]
 trust_level = "trusted"
 
+[projects."/home/matheus/Work/tupi-fintech/yby/workspace"]
+trust_level = "trusted"
+
 [mcp_servers."open-computer-use"]
 command = "open-computer-use"
 args = ["mcp"]
@@ -71,7 +74,7 @@ hooks = true
 [hooks.state]
 
 [hooks.state."/home/matheus/.codex/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:28ae07f1c8b96f695aad8a4c9c39d212742076915c076bc5d2d7cc71d413c3f0"
+trusted_hash = "sha256:e8af73bddb43449e216c2a4cbc3e15245c88817a950676e416ba97f9d1b48079"
 
 [hooks.state."/home/matheus/.codex/hooks.json:session_start:0:0"]
 trusted_hash = "sha256:33140a7d39d7038ec48c9f5df8f8a4c2497e601ae5d1c6c13ebbe4a4e1baa8c1"
