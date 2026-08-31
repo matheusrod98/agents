@@ -5,13 +5,29 @@ description: Query Grafana metrics, logs, dashboards, and alerts with the offici
 
 # Grafana via gcx
 
-`gcx` is Grafana's official agent-oriented CLI. Every command reads the server
-and token from the environment — prefix each invocation with:
+`gcx` is Grafana's official agent-oriented CLI. It authenticates through a
+named login context, not environment variables.
+
+## Auth
+
+The `grafana-dev` context is logged in once with the service-account token;
+re-run this only when the token is rotated or the context is missing:
 
 ```sh
-GRAFANA_SERVER=https://grafana-dev.tupifintech.com \
-GRAFANA_TOKEN="$(cat "$GRAFANA_TOKEN_FILE")" \
+gcx login --yes grafana-dev \
+  --server https://grafana-dev.tupifintech.com \
+  --token "$(cat "$GRAFANA_TOKEN_FILE")"
 ```
+
+Afterwards every command is plain `gcx <command> -o json`. Output flags and
+commands were verified against gcx 1.1.0.
+
+## VPN
+
+grafana-dev.tupifintech.com resolves through Cloudflare but the origin is
+only reachable over the pritunl VPN. On timeout / "server unreachable":
+check `pritunl-client list` — an empty table means the tunnel is down; ask
+the user to connect it. Never retry-loop against a timed-out server.
 
 Always append `-o json` (or `-o yaml`) for machine-readable output.
 
@@ -37,10 +53,11 @@ Always append `-o json` (or `-o yaml`) for machine-readable output.
 
 ## Reference
 
-- Token: `$GRAFANA_TOKEN_FILE` holds a service-account token (`glsa_...`).
-  No interactive login is needed; `gcx login` exists but is Cloud-oriented.
-- Version gate: gcx requires Grafana >= 12 (13+ fully supported). Confirm with
-  `curl -sS "$GRAFANA_SERVER/api/health"` before blaming the CLI.
+- Token: `$GRAFANA_TOKEN_FILE` holds a service-account token (`glsa_...`);
+  it is consumed by `gcx login` (above), not by day-to-day commands.
+- Version gate: gcx requires Grafana >= 12 (13+ fully supported). Confirm
+  with `curl -sS https://grafana-dev.tupifintech.com/api/health` (VPN on)
+  before blaming the CLI.
 - Cloud-only feature areas (SLO, IRM, synthetic monitoring, k6, Assistant) do
   not apply to this self-hosted instance.
 - Features the old MCP exposed with no gcx subcommand — Grafana Incident,

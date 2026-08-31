@@ -11,11 +11,12 @@ observed through **snapshot files**, not context: snapshots land in
 
 ## Session flow
 
-1. Open: `playwright-cli open <url> --browser=chromium`. Headless by default;
-   add `--headed` to watch. The CLI pulls its own Chromium on first use; if
-   that browser is unavailable, launch the system Chrome with
-   `google-chrome-stable --remote-debugging-port=9222` and run
-   `playwright-cli attach --cdp=9222` instead of debugging the download.
+1. Open: `playwright-cli open <url> --browser chrome`. Headless by default;
+   add `--headed` to watch. On this machine `chrome` is the verified path —
+   it drives the installed system `google-chrome-stable` (no download). The
+   default bundled Chromium needs `playwright-cli install chromium` and is
+   the fallback, as is `attach --cdp=<port>` against an already-running
+   Chrome started with `--remote-debugging-port`.
 2. Snapshot: `playwright-cli snapshot --filename=page.yml`, then `read` it.
    Every interactive element carries a ref (e.g. `e15`).
    `playwright-cli snapshot --json` returns a structured snapshot instead.
