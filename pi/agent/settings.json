@@ -13,7 +13,8 @@
     "npm:pi-subagents",
     "npm:pi-background-tasks",
     "npm:@juicesharp/rpiv-todo",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@plannotator/pi-extension"
   ],
   "quietStartup": false,
   "theme": "rose-pine",
