@@ -27,7 +27,8 @@
     },
     "gitlab": {
       "type": "http",
-      "url": "https://gitlab.com/api/v4/mcp"
+      "url": "https://gitlab.convem.me/api/v4/mcp",
+      "auth": "oauth"
     },
     "grafana": {
       "command": "mcp-grafana",
