@@ -1,54 +1,48 @@
 {
   "collapseChangelog": true,
   "enabledModels": [
-    "openai-codex/gpt-5.6-luna:xhigh",
+    "zai/glm-5.3-flash:high",
     "openai-codex/gpt-5.6-sol:high",
-    "openai-codex/gpt-5.6-terra:high",
-    "opencode-go/deepseek-v4-pro:high",
-    "opencode/deepseek-v4-flash-free:max"
+    "opencode-go/qwen3.8-flash:medium",
+    "xai/grok-4.6:high"
   ],
   "hideThinkingBlock": true,
   "packages": [
     "npm:pi-web-access",
     "npm:pi-mcp-adapter",
-    "npm:@plannotator/pi-extension",
-    "npm:@tintinweb/pi-subagents",
-    "npm:@tintinweb/pi-tasks",
+    "npm:pi-subagents",
+    "npm:pi-background-tasks",
+    "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "quietStartup": false,
-  "lastChangelogVersion": "0.84.2",
   "theme": "rose-pine",
   "subagents": {
     "agentOverrides": {
       "scout": {
-        "model": "opencode-go/gpt-5.6-luna",
+        "model": "opencode-go/qwen3.8-flash",
         "thinking": "medium"
       },
       "researcher": {
-        "model": "opencode-go/gpt-5.6-luna",
-        "thinking": "medium"
+        "model": "xai/grok-4.6",
+        "thinking": "high"
       },
       "worker": {
-        "model": "opencode-go/deepseek-v4-pro",
+        "model": "zai/glm-5.3-flash",
         "thinking": "high"
       },
       "delegate": {
-        "model": "opencode-go/gpt-5.6-luna",
-        "thinking": "xhigh"
+        "model": "xai/grok-4.6",
+        "thinking": "medium"
       },
       "reviewer": {
-        "model": "openai-codex/gpt-5.6-sol",
+        "model": "xai/grok-4.6",
         "thinking": "high"
       },
       "oracle": {
-        "model": "openai-codex/gpt-5.6-sol",
-        "thinking": "xhigh"
+        "model": "xai/grok-4.6",
+        "thinking": "high"
       }
     }
-  },
-  "defaultProjectTrust": "always",
-  "defaultProvider": "opencode",
-  "defaultModel": "deepseek-v4-flash-free",
-  "defaultThinkingLevel": "high"
+  }
 }
