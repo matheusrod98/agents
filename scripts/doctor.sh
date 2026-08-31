@@ -22,23 +22,36 @@ check_command() {
   fi
 }
 
-printf 'Runtime\n'
+printf 'Pi\n'
+check_command pi
+
+printf '\nAgent CLIs\n'
 for command in \
-  drawio-mcp \
-  github-mcp-server \
-  mcp-grafana \
+  aws \
+  gh \
+  glab \
+  gcx \
+  kubectl \
+  drawio \
+  ctx7 \
+  playwright-cli \
+  td \
   open-computer-use \
-  kubernetes-mcp-server \
-  playwright-mcp \
   chromium; do
   check_command "$command"
 done
 
-if test -x "${PLAYWRIGHT_MCP_EXECUTABLE_PATH:-}"; then
-  ok "PLAYWRIGHT_MCP_EXECUTABLE_PATH -> $PLAYWRIGHT_MCP_EXECUTABLE_PATH"
-else
-  fail "PLAYWRIGHT_MCP_EXECUTABLE_PATH"
-fi
+printf '\nTooling (pre-commit hooks, doctor)\n'
+for command in \
+  node \
+  git \
+  pre-commit \
+  markdownlint-cli2 \
+  prettier \
+  shellcheck \
+  shfmt; do
+  check_command "$command"
+done
 
 printf '\nSandboxes\n'
 check_command sbx

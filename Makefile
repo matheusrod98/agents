@@ -1,12 +1,6 @@
 PI := $(HOME)/.pi/agent
-CLAUDE_CONFIG_DIR ?= $(HOME)/.claude
-CLAUDE_USER_CONFIG ?= $(HOME)/.claude.json
-CODEX_HOME ?= $(HOME)/.codex
-XDG_CONFIG_HOME ?= $(HOME)/.config
-MCP_CONFIG := $(XDG_CONFIG_HOME)/mcp/mcp.json
-OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 
-.PHONY: all pi mcp claude-code opencode codex doctor pre-commit\:install skills\:update skills\:install sbx-mcp
+.PHONY: all pi doctor pre-commit\:install skills\:update skills\:install
 
 # Catch-all so positional skill arguments passed to `make skills:install
 # <skill>` are not treated as targets to build. Only fires for goals with no
@@ -15,7 +9,7 @@ OPENCODE_CONFIG_DIR?= $(XDG_CONFIG_HOME)/opencode
 	@:
 
 all: doctor
-	@$(MAKE) mcp pi claude-code opencode codex
+	@$(MAKE) pi
 	@$(MAKE) pre-commit:install
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills pi\:web-search
@@ -44,58 +38,8 @@ pi\:web-search:
 	mkdir -p "$(HOME)/.pi"
 	ln -sfn "$(CURDIR)/pi/web-search.json" "$(HOME)/.pi/web-search.json"
 
-mcp:
-	mkdir -p "$(dir $(MCP_CONFIG))"
-	ln -sfn "$(CURDIR)/.mcp.json" "$(MCP_CONFIG)"
-
-claude-code: claude-code\:skills claude-code\:settings claude-code\:claude-md claude-code\:mcp
-
-claude-code\:skills:
-	mkdir -p "$(CLAUDE_CONFIG_DIR)"
-	ln -sfn "$(CURDIR)/skills" "$(CLAUDE_CONFIG_DIR)/skills"
-
-claude-code\:settings:
-	mkdir -p "$(CLAUDE_CONFIG_DIR)"
-	ln -sfn "$(CURDIR)/claude-code/settings.json" "$(CLAUDE_CONFIG_DIR)/settings.json"
-
-claude-code\:claude-md:
-	mkdir -p "$(CLAUDE_CONFIG_DIR)"
-	ln -sfn "$(CURDIR)/claude-code/CLAUDE.md" "$(CLAUDE_CONFIG_DIR)/CLAUDE.md"
-
-# ~/.claude.json can't be symlinked like the rest of this repo — see
-# scripts/claude-code-mcp-sync.sh.
-claude-code\:mcp:
-	@"$(CURDIR)/scripts/claude-code-mcp-sync.sh" "$(CURDIR)/.mcp.json" "$(CLAUDE_USER_CONFIG)"
-
-opencode: opencode\:config opencode\:tui opencode\:skills
-
-opencode\:config:
-	mkdir -p "$(OPENCODE_CONFIG_DIR)"
-	ln -sfn "$(CURDIR)/opencode/opencode.json" "$(OPENCODE_CONFIG_DIR)/opencode.json"
-
-opencode\:tui:
-	mkdir -p "$(OPENCODE_CONFIG_DIR)"
-	ln -sfn "$(CURDIR)/opencode/tui.json" "$(OPENCODE_CONFIG_DIR)/tui.json"
-
-opencode\:skills:
-	mkdir -p "$(OPENCODE_CONFIG_DIR)/skills"
-	ln -sfn $(CURDIR)/skills/* "$(OPENCODE_CONFIG_DIR)/skills/"
-
-codex: codex\:config codex\:skills
-
-codex\:config:
-	mkdir -p "$(CODEX_HOME)"
-	ln -sfn "$(CURDIR)/codex/config.toml" "$(CODEX_HOME)/config.toml"
-
-codex\:skills:
-	mkdir -p "$(CODEX_HOME)/skills"
-	ln -sfn $(CURDIR)/skills/* "$(CODEX_HOME)/skills/"
-
 doctor:
 	@"$(CURDIR)/scripts/doctor.sh"
-
-sbx-mcp:
-	@"$(CURDIR)/scripts/sbx-mcp-sync.sh" --apply
 
 pre-commit\:install:
 	@pre-commit install

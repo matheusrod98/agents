@@ -2,31 +2,34 @@
 
 ## Boundary
 
-This repository owns agent-facing content: settings, skills, prompts, themes,
-and MCP registrations. The machine repository at `~/.dotfiles` owns packages,
-wrappers, secrets, services, and runtime environment.
+This repository owns the pi coding agent configuration: settings, extensions,
+prompts, themes, and skills. The machine repository at `~/.dotfiles` owns
+packages, wrappers, secrets, services, and the runtime environment.
 
-Agent configs consume local runtimes through executable names on `PATH` and
-documented environment variables. Keep package-manager paths and machine
-implementation details in `~/.dotfiles`.
+Pi consumes local runtimes through executable names on `PATH` and `*_FILE`
+session variables exported by the machine repo. Keep package-manager paths and
+machine implementation details in `~/.dotfiles`.
 
-Edit source files here. Use `make` to update the installed projections rather
-than editing files under agent config directories directly.
+Edit source files here. Use `make` to update the installed symlinks rather than
+editing files under `~/.pi/agent` directly.
+
+## No MCP
+
+This setup runs without MCP servers or MCP adapters. Services are reached
+through CLIs driven over bash and documented in `skills/`. Do not reintroduce
+MCP registrations, `.mcp.json`, or MCP packages.
 
 ## Validation
 
-- Run `make` after configuration changes; it installs links, the pre-commit hook,
-  and runs `scripts/doctor.sh`.
+- Run `make` after configuration changes; it installs links, the pre-commit
+  hook, and runs `scripts/doctor.sh`.
 - Run `make doctor` when only the machine runtime changed.
-- Keep `scripts/doctor.sh` synchronized with local stdio MCP servers and their
-  runtime dependencies whenever the MCP registry changes.
-- Playwright MCP requires `PLAYWRIGHT_MCP_EXECUTABLE_PATH` in the environment.
-- Docker Sandboxes requires the `sbx` CLI on `PATH` (provided by the machine
-  repo); `make doctor` checks it and `scripts/sbx-mcp-sync.sh` mirrors
-  `.mcp.json` into the `sbx mcp` gateway.
-- Read `README.md` when changing setup, install targets, or the runtime contract.
+- Keep `scripts/doctor.sh` synchronized with the CLIs the skills rely on
+  whenever that set changes.
+- Read `README.md` when changing setup, install targets, or the runtime
+  contract.
 
 ## Skill Updates
 
-After `make skills:update`, review every changed skill file, using a subagent, and its upstream
-source for security before committing the update.
+After `make skills:update`, review every changed skill file, using a subagent,
+and its upstream source for security before committing the update.
