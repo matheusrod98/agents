@@ -38,7 +38,13 @@
     "atlassian@claude-plugins-official": true,
     "slack@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
+  "modelSettings": {
+    "claude-sonnet-5": {
+      "effortLevel": "high"
+    }
+  },
+  "tui": "fullscreen",
   "editorMode": "vim",
   "agentPushNotifEnabled": true
 }
