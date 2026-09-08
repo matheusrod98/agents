@@ -1,4 +1,4 @@
 {
   "workflow": "auto-summary",
-  "summaryModel": "opencode-go/qwen3.8-flash:medium"
+  "summaryModel": "zai/glm-5.3-flash:low"
 }
