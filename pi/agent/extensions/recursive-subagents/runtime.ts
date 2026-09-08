@@ -15,8 +15,17 @@ import {
 import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
 import { childResources } from "./child-resources.ts";
+import {
+  childBashToolDefinition,
+  deliverChildEvent,
+  MESSAGE_TYPE,
+  notifyChildTimeout,
+  reportChildEvent,
+  type DeliveryContext,
+} from "./timeout-notify.ts";
+import { TimeoutSupervisor } from "./timeout.ts";
 
-export const MESSAGE_TYPE = "recursive-subagents";
+export { MESSAGE_TYPE };
 export type Activity =
   "starting" | "working" | "idle" | "error" | "interrupted" | "closed";
 export interface HistoryItem {
@@ -64,6 +73,7 @@ export interface RootHost {
   record(data: unknown): void;
   changed(snapshot: TreeSnapshot): void;
 }
+
 const brief = `You are a Pi subagent. Work on your assigned task autonomously. You may delegate recursively using subagent; spawning never waits for completion. Give children concrete briefs. Results arrive automatically: do not poll, sleep, or keep generating merely to wait. You may finish your response while children work. Use ask_parent for missing guidance, then continue independent work or go idle. Use answer_question to answer questions addressed to you; if unsure, use your own ask_parent and relay the answer. Questions and answers are asynchronous. A settled response is not proof that a task succeeded. Report failures, partial work, and remaining children honestly. You have Pi built-in tools, skills, project context, and explicitly selected work extensions. Interactive-only extensions are not loaded. If a tool requests unsupported UI, explain the needed interaction with ask_parent; never fabricate an answer. These sessions share the filesystem, not a sandbox. Coordinate edits yourself.`;
 
 function textResult(value: unknown) {
@@ -106,6 +116,7 @@ export class AgentTree {
   private userDialog?: AbortController;
   private userQuestions: string[] = [];
   private askingUser = false;
+  private timeouts = new TimeoutSupervisor();
 
   constructor(private host: RootHost) {
     const ctx = host.context();
@@ -405,6 +416,11 @@ export class AgentTree {
     );
     child.cleanup = () => eventBus.clear();
     if (this.disposed) return;
+    const bashCall = {
+      toolCallId: "unknown",
+      attempt: 0,
+      args: undefined as unknown,
+    };
     const { session } = await createAgentSession({
       cwd: child.cwd,
       model,
@@ -428,7 +444,21 @@ export class AgentTree {
           .getExtensions()
           .extensions.flatMap((extension) => [...extension.tools.keys()]),
       ],
-      customTools: this.tools(child.id),
+      customTools: [
+        childBashToolDefinition(child.cwd, (event) => {
+          if (bashCall.attempt === 0) bashCall.attempt = 1;
+          notifyChildTimeout({
+            supervisor: this.timeouts,
+            child,
+            event,
+            toolCallId: bashCall.toolCallId,
+            attempt: bashCall.attempt,
+            args: bashCall.args,
+            report: (kind, text) => this.report(child, kind, text),
+          });
+        }),
+        ...this.tools(child.id),
+      ],
     });
     if (this.disposed) {
       session.dispose();
@@ -459,8 +489,14 @@ export class AgentTree {
         child.lastAssistant = undefined;
         this.changed();
       }
-      if (event.type === "tool_execution_start")
+      if (event.type === "tool_execution_start") {
         this.note(child.id, "tool", event.toolName);
+        if (event.toolName === "bash") {
+          bashCall.attempt += 1;
+          bashCall.toolCallId = event.toolCallId;
+          bashCall.args = event.args;
+        }
+      }
       if (event.type === "tool_execution_end" && event.isError)
         this.note(child.id, "tool error", messageText(event.result));
       if (event.type === "message_end" && event.message.role === "assistant") {
@@ -523,52 +559,22 @@ export class AgentTree {
     this.report(child, "error", `${text}\nSession: ${child.sessionFile}`);
   }
 
-  /** Automatic reports must survive an immediate parent's independent closure. */
-  private report(child: LiveAgent, kind: string, text: string) {
-    if (this.disposed) return;
-    try {
-      this.deliver(child.id, child.parentId!, kind, text);
-    } catch (error) {
-      this.deliveryFailed(child.id, child.parentId!, kind, text, error);
-    }
+  private delivery(): DeliveryContext {
+    const tree = this;
+    return {
+      get disposed() {
+        return tree.disposed;
+      },
+      rootId: tree.rootId,
+      host: tree.host,
+      get: (id) => tree.get(id),
+      note: (id, kind, text) => tree.note(id, kind, text),
+    };
   }
 
-  private deliveryFailed(
-    from: string,
-    to: string,
-    kind: string,
-    text: string,
-    error: unknown,
-  ) {
-    if (this.disposed) return;
-    // This also runs in detached promise handlers; failure to notify must not
-    // turn an already retained child response into an unhandled rejection.
-    try {
-      const content = `Undelivered ${kind} from ${this.get(from).name} to ${this.get(to).name}: ${errorText(error)}\n${text}\nSource session: ${this.get(from).sessionFile}`;
-      this.note(from, "delivery error", content);
-      this.host.record({
-        kind: "undelivered",
-        from,
-        to,
-        messageKind: kind,
-        text,
-      });
-      this.host.send(
-        truncateHead(content, { maxBytes: 24000, maxLines: 600 }).content,
-        {
-          from,
-          to: this.rootId,
-          intendedRecipient: to,
-          kind: "delivery error",
-        },
-        false,
-      );
-    } catch (notificationError) {
-      console.error(
-        "Subagent delivery notification failed:",
-        errorText(notificationError),
-      );
-    }
+  /** Automatic reports must survive an immediate parent's independent closure. */
+  private report(child: LiveAgent, kind: string, text: string) {
+    reportChildEvent(this.delivery(), child, kind, text);
   }
 
   private deliver(
@@ -579,47 +585,15 @@ export class AgentTree {
     questionId?: string,
     triggerTurn = true,
   ) {
-    if (this.disposed)
-      throw new Error("The owning root session has shut down.");
-    const from = this.get(fromId);
-    const to = this.get(toId);
-    if (to.activity === "closed")
-      throw new Error(
-        `Session ${toId} is closed. Its conversation is still stored in Pi.`,
-      );
-    const content = `[${kind} from ${from.name} (${from.id})${questionId ? `; question ${questionId}` : ""}]\n${text}`;
-    const bounded = truncateHead(content, { maxBytes: 24000, maxLines: 600 });
-    const delivered =
-      bounded.content +
-      (bounded.truncated
-        ? `\n[Truncated. Full source session: ${from.sessionFile}]`
-        : "");
-    const details = { from: fromId, to: toId, kind, questionId };
-    this.note(fromId, `sent → ${to.name}`, content);
-    if (toId === this.rootId) {
-      this.host.send(delivered, details, triggerTurn);
-      this.note(toId, "received", delivered);
-      return;
-    }
-    // Readiness covers SDK initialization only, never the active model response.
-    void Promise.resolve(to.ready)
-      .then(() => {
-        if (this.disposed) return;
-        if (!to.session || to.activity === "closed")
-          throw new Error(`Session ${toId} is not available.`);
-        return to.session.sendCustomMessage(
-          {
-            customType: MESSAGE_TYPE,
-            content: delivered,
-            display: true,
-            details,
-          },
-          { triggerTurn, deliverAs: "steer" },
-        );
-      })
-      .catch((error) => {
-        this.deliveryFailed(fromId, toId, kind, text, error);
-      });
+    deliverChildEvent(
+      this.delivery(),
+      fromId,
+      toId,
+      kind,
+      text,
+      questionId,
+      triggerTurn,
+    );
   }
 
   private ask(fromId: string, text: string) {

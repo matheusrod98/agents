@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-strip-types --test timeout.test.ts timeout.process.test.ts"
+    "test": "node --experimental-strip-types --test timeout.test.ts timeout.process.test.ts runtime.timeout.test.ts"
   },
   "keywords": [],
   "author": "",
