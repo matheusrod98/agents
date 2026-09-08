@@ -104,6 +104,12 @@ export function notifyChildTimeout(input: {
     observedErrors: [input.event.error.message],
     cancellation: input.event.cancellation,
     childActivity: input.child.activity,
+    artifacts: input.child.sessionFile
+      ? {
+          sessionFile: input.child.sessionFile,
+          sourceSession: input.child.sessionFile,
+        }
+      : undefined,
     sessionFile: input.child.sessionFile,
     sourceSession: input.child.sessionFile,
   });

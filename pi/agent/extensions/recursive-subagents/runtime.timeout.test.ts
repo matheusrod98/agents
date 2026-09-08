@@ -146,7 +146,52 @@ describe("notifyChildTimeout", () => {
     assert.match(reports[0]?.text ?? "", /search github without repeating stalls/);
     assert.match(reports[0]?.text ?? "", /incidentId: child-1:1:call-1/);
     assert.match(reports[0]?.text ?? "", /sessionFile: \/tmp\/child\.jsonl/);
+    assert.match(
+      reports[0]?.text ?? "",
+      /artifacts: \{"sessionFile":"\/tmp\/child\.jsonl","sourceSession":"\/tmp\/child\.jsonl"\}/,
+    );
+    assert.match(reports[0]?.text ?? "", /unfinishedWork: unavailable/);
     assert.equal(child.activity, "working");
+  });
+
+  it("leaves attempt 0 and unknown toolCallId when start has not run", () => {
+    const reports: Array<{ kind: string; text: string }> = [];
+    const notified = notifyChildTimeout({
+      supervisor: new TimeoutSupervisor(),
+      child: childAgent(),
+      event: timeoutEvent(),
+      toolCallId: "unknown",
+      attempt: 0,
+      report: (kind, text) => reports.push({ kind, text }),
+    });
+    assert.equal(notified, true);
+    assert.match(reports[0]?.text ?? "", /incidentId: child-1:0:unknown/);
+    assert.match(reports[0]?.text ?? "", /attempt: 0/);
+    assert.match(reports[0]?.text ?? "", /toolCallId: unknown/);
+  });
+
+  it("reuses the tool_execution_start attempt and toolCallId", () => {
+    const reports: Array<{ kind: string; text: string }> = [];
+    const bashCall = {
+      toolCallId: "unknown",
+      attempt: 0,
+      args: undefined as unknown,
+    };
+    bashCall.attempt += 1;
+    bashCall.toolCallId = "call-start";
+    bashCall.args = { command: "gh search" };
+    notifyChildTimeout({
+      supervisor: new TimeoutSupervisor(),
+      child: childAgent(),
+      event: timeoutEvent(),
+      toolCallId: bashCall.toolCallId,
+      attempt: bashCall.attempt,
+      args: bashCall.args,
+      report: (kind, text) => reports.push({ kind, text }),
+    });
+    assert.match(reports[0]?.text ?? "", /incidentId: child-1:1:call-start/);
+    assert.match(reports[0]?.text ?? "", /toolCallId: call-start/);
+    assert.match(reports[0]?.text ?? "", /"command":"gh search"/);
   });
 
   it("dedups the same incident transition", () => {

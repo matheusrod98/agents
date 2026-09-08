@@ -74,6 +74,7 @@ export type TimeoutIncident = {
   cancellation: CancellationStatus;
   childActivity: string | Unavailable;
   artifacts: unknown | Unavailable;
+  unfinishedWork: string | Unavailable;
   sessionFile: string | Unavailable;
   sourceSession: string | Unavailable;
   priorAttempts: PriorAttempt[];
@@ -98,6 +99,7 @@ export type CreateIncidentInput = {
   cancellation: CancellationStatus;
   childActivity?: string;
   artifacts?: unknown;
+  unfinishedWork?: string;
   sessionFile?: string;
   sourceSession?: string;
   priorAttempts?: PriorAttempt[];
@@ -288,6 +290,7 @@ export function createIncident(input: CreateIncidentInput): TimeoutIncident {
     cancellation: input.cancellation,
     childActivity: input.childActivity ?? UNAVAILABLE,
     artifacts: input.artifacts ?? UNAVAILABLE,
+    unfinishedWork: input.unfinishedWork ?? UNAVAILABLE,
     sessionFile: input.sessionFile ?? UNAVAILABLE,
     sourceSession: input.sourceSession ?? UNAVAILABLE,
     priorAttempts: input.priorAttempts ?? [],
@@ -320,6 +323,12 @@ export function formatTimeoutIncident(incident: TimeoutIncident): string {
   return [
     `timeout:${incident.timeoutSeconds}`,
     field("incidentId", incident.incidentId),
+    field("cancellation", incident.cancellation),
+    incident.competingExecutionMayBeActive
+      ? "competing execution may still be active"
+      : "competing execution: none reported",
+    field("sessionFile", incident.sessionFile),
+    field("sourceSession", incident.sourceSession),
     field("childId", incident.childId),
     field("attempt", incident.attempt),
     field("toolCallId", incident.toolCallId),
@@ -330,18 +339,13 @@ export function formatTimeoutIncident(incident: TimeoutIncident): string {
     field("startedAt", incident.startedAt),
     field("deadline", incident.deadline),
     field("elapsedMs", incident.elapsedMs),
-    field("partialOutput", incident.partialOutput),
-    observed,
-    field("cancellation", incident.cancellation),
     field("childActivity", incident.childActivity),
     field("artifacts", incident.artifacts),
-    field("sessionFile", incident.sessionFile),
-    field("sourceSession", incident.sourceSession),
+    field("unfinishedWork", incident.unfinishedWork),
+    observed,
     prior,
-    incident.competingExecutionMayBeActive
-      ? "competing execution may still be active"
-      : "competing execution: none reported",
     "inferred cause: unavailable",
+    field("partialOutput", incident.partialOutput),
   ].join("\n");
 }
 

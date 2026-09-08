@@ -446,7 +446,6 @@ export class AgentTree {
       ],
       customTools: [
         childBashToolDefinition(child.cwd, (event) => {
-          if (bashCall.attempt === 0) bashCall.attempt = 1;
           notifyChildTimeout({
             supervisor: this.timeouts,
             child,

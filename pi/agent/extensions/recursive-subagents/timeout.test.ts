@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { BashOperations } from "@earendil-works/pi-coding-agent";
+import { truncateHead } from "@earendil-works/pi-coding-agent";
 import {
   CANCEL_CONFIRMATION_MS,
   createFakeClock,
@@ -238,6 +239,32 @@ describe("wrapChildBashOperations", () => {
       },
     );
   });
+
+  it("completes a later exec after a wrapper timeout", async () => {
+    const clock = createFakeClock();
+    let calls = 0;
+    const wrapped = wrapChildBashOperations(
+      {
+        exec: async () => {
+          calls += 1;
+          if (calls === 1) return new Promise(() => {});
+          return { exitCode: 0 };
+        },
+      },
+      { clock, confirmationMs: CANCEL_CONFIRMATION_MS },
+    );
+    const pending = wrapped.exec("sleep 120", "/tmp", {
+      onData() {},
+      timeout: 1,
+    });
+    clock.advance(1000 + CANCEL_CONFIRMATION_MS);
+    await assert.rejects(pending, /timeout:1/);
+    assert.deepEqual(
+      await wrapped.exec("echo ok", "/tmp", { onData() {}, timeout: 1 }),
+      { exitCode: 0 },
+    );
+    assert.equal(calls, 2);
+  });
 });
 
 describe("redactSecrets", () => {
@@ -279,6 +306,7 @@ describe("incidents", () => {
     assert.deepEqual(incident.cwd, { unavailable: true });
     assert.deepEqual(incident.childActivity, { unavailable: true });
     assert.deepEqual(incident.artifacts, { unavailable: true });
+    assert.deepEqual(incident.unfinishedWork, { unavailable: true });
     assert.deepEqual(incident.sessionFile, { unavailable: true });
     assert.deepEqual(incident.sourceSession, { unavailable: true });
     assert.deepEqual(incident.args, { unavailable: true });
@@ -323,8 +351,45 @@ describe("incidents", () => {
     assert.match(formatted, /GITHUB_TOKEN=\[REDACTED\]/);
     assert.match(formatted, /observed errors:\n- HTTP 500/);
     assert.match(formatted, /inferred cause: unavailable/);
+    assert.match(formatted, /unfinishedWork: unavailable/);
     assert.match(formatted, /prior attempts:\n- child-1:0:old/);
     assert.doesNotMatch(formatted, /caused by HTTP/i);
+    const incidentIdAt = formatted.indexOf("incidentId:");
+    const cancellationAt = formatted.indexOf("cancellation:");
+    const competingAt = formatted.indexOf("competing execution");
+    const sessionAt = formatted.indexOf("sessionFile:");
+    const sourceAt = formatted.indexOf("sourceSession:");
+    const observedAt = formatted.indexOf("observed errors:");
+    const partialAt = formatted.indexOf("partialOutput:");
+    assert.ok(incidentIdAt >= 0 && incidentIdAt < observedAt);
+    assert.ok(cancellationAt < observedAt && cancellationAt < partialAt);
+    assert.ok(competingAt < observedAt && sessionAt < observedAt && sourceAt < observedAt);
+    assert.ok(partialAt > observedAt);
+    assert.match(formatted.slice(partialAt), /^partialOutput:/);
+  });
+
+  it("keeps cancellation and incidentId after truncateHead", () => {
+    const incident = createIncident({
+      childId: "child-1",
+      attempt: 1,
+      toolCallId: "call-1",
+      command: "gh search repos",
+      startedAt: 0,
+      deadline: 1000,
+      elapsedMs: 1000,
+      cancellation: "unconfirmed",
+      partialOutput: "P".repeat(4000),
+      observedErrors: [`E${"x".repeat(30000)}`],
+      sessionFile: "/tmp/session.jsonl",
+      sourceSession: "/tmp/session.jsonl",
+    });
+    const formatted = formatTimeoutIncident(incident);
+    const truncated = truncateHead(formatted, { maxBytes: 24000, maxLines: 600 });
+    assert.equal(truncated.truncated, true);
+    assert.match(truncated.content, /incidentId: child-1:1:call-1/);
+    assert.match(truncated.content, /cancellation: unconfirmed/);
+    assert.match(truncated.content, /competing execution may still be active/);
+    assert.match(truncated.content, /sessionFile: \/tmp\/session\.jsonl/);
   });
 
   it("dedups the same supervisor transition", () => {
