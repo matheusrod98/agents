@@ -1,2 +1,8 @@
 # Generated/provisioned resources (see Makefile)
 bin/
+
+# Scratch space
+.scratch/
+
+# Dependencies
+node_modules/
