@@ -24,6 +24,9 @@ check_command() {
 
 printf 'Pi\n'
 check_command pi
+if test "${HERDR_ENV:-}" = 1; then
+  check_command herdr
+fi
 
 printf '\nAgent CLIs\n'
 for command in \

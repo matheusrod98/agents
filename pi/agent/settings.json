@@ -9,40 +9,11 @@
   "hideThinkingBlock": true,
   "packages": [
     "npm:pi-web-access",
-    "npm:pi-subagents",
     "npm:pi-background-tasks",
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@plannotator/pi-extension"
   ],
   "quietStartup": false,
-  "theme": "rose-pine",
-  "subagents": {
-    "agentOverrides": {
-      "scout": {
-        "model": "opencode-go/qwen3.8-flash",
-        "thinking": "medium"
-      },
-      "researcher": {
-        "model": "xai/grok-4.6",
-        "thinking": "high"
-      },
-      "worker": {
-        "model": "zai/glm-5.3-flash",
-        "thinking": "high"
-      },
-      "delegate": {
-        "model": "xai/grok-4.6",
-        "thinking": "medium"
-      },
-      "reviewer": {
-        "model": "xai/grok-4.6",
-        "thinking": "high"
-      },
-      "oracle": {
-        "model": "xai/grok-4.6",
-        "thinking": "high"
-      }
-    }
-  }
+  "theme": "rose-pine"
 }
