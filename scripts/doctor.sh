@@ -35,7 +35,7 @@ for command in \
   drawio \
   ctx7 \
   playwright-cli \
-  td \
+  ticktick-cli \
   open-computer-use \
   chromium; do
   check_command "$command"

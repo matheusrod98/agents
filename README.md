@@ -46,7 +46,7 @@ package-manager or machine-specific paths. The machine configuration
 | `drawio`            | draw.io diagrams (author XML, `drawio -x` export) |
 | `ctx7`              | library documentation (Context7)                  |
 | `playwright-cli`    | browser automation (Chromium / system Chrome)     |
-| `td`                | Todoist                                           |
+| `ticktick-cli`      | TickTick                                          |
 | `open-computer-use` | desktop control (Linux, AT-SPI2)                  |
 
 Tokens come from `*_FILE` session variables exported by the machine repo (for
