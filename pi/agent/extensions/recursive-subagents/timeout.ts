@@ -425,29 +425,38 @@ export function wrapChildBashOperations(
         | { type: "err"; error: unknown }
         | undefined;
 
+      const boundAbort = new AbortController();
+      const innerAbort = new AbortController();
+      const onUserAbort = () => {
+        innerAbort.abort();
+        boundAbort.abort();
+      };
+      execOptions.signal?.addEventListener("abort", onUserAbort, { once: true });
+      if (execOptions.signal?.aborted) onUserAbort();
+
       const innerDone = inner
         .exec(command, cwd, {
           ...execOptions,
           onData,
           timeout: timeoutSeconds,
+          signal: innerAbort.signal,
         })
-        .then((value) => {
-          outcome = { type: "ok", value };
-          return value;
-        })
-        .catch((error: unknown) => {
-          outcome = { type: "err", error };
-          throw error;
-        });
+        .then(
+          (value) => {
+            outcome = { type: "ok", value };
+          },
+          (error: unknown) => {
+            outcome = { type: "err", error };
+          },
+        );
 
-      const bound = clock.sleep(
-        timeoutMs + confirmationMs,
-        execOptions.signal,
-      ).then(async () => {
-        await Promise.resolve();
-        if (outcome) return;
-        throw timeoutError(timeoutSeconds, "unconfirmed");
-      });
+      const bound = clock
+        .sleep(timeoutMs + confirmationMs, boundAbort.signal)
+        .then(async () => {
+          await Promise.resolve();
+          if (outcome) return;
+          throw timeoutError(timeoutSeconds, "unconfirmed");
+        });
 
       const finishTimeout = (cancellation: CancellationStatus) => {
         const error = timeoutError(timeoutSeconds, cancellation);
@@ -482,10 +491,16 @@ export function wrapChildBashOperations(
       } catch (error) {
         if (outcome?.type === "ok") return outcome.value;
         if (outcome?.type === "err") return classify(outcome.error);
+        innerAbort.abort();
         return classify(error);
+      } finally {
+        boundAbort.abort();
+        execOptions.signal?.removeEventListener("abort", onUserAbort);
+        void bound.catch(() => {});
       }
       if (outcome?.type === "ok") return outcome.value;
       if (outcome?.type === "err") return classify(outcome.error);
+      innerAbort.abort();
       return finishTimeout("unconfirmed");
     },
   };

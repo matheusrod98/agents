@@ -13,12 +13,6 @@ import {
   redactSecrets,
 } from "./timeout.ts";
 
-function hangingOperations(): BashOperations {
-  return {
-    exec: () => new Promise(() => {}),
-  };
-}
-
 function recordingOperations(
   seen: { timeout?: number },
   impl?: BashOperations["exec"],
@@ -57,8 +51,15 @@ describe("wrapChildBashOperations", () => {
   it("passes the omitted default timeout through to inner exec", async () => {
     const seen: { timeout?: number } = {};
     const wrapped = wrapChildBashOperations(recordingOperations(seen));
+    const timeoutsBefore = process
+      .getActiveResourcesInfo()
+      .filter((name) => name === "Timeout").length;
     await wrapped.exec("true", "/tmp", { onData() {} });
     assert.equal(seen.timeout, DEFAULT_CHILD_BASH_TIMEOUT_SECONDS);
+    const timeoutsAfter = process
+      .getActiveResourcesInfo()
+      .filter((name) => name === "Timeout").length;
+    assert.equal(timeoutsAfter, timeoutsBefore);
   });
 
   it("passes an explicit timeout through to inner exec", async () => {
@@ -153,15 +154,26 @@ describe("wrapChildBashOperations", () => {
   it("reports unconfirmed cancellation when inner does not settle by the bound", async () => {
     const clock = createFakeClock();
     const incidents: Array<{ cancellation: string; message: string }> = [];
-    const wrapped = wrapChildBashOperations(hangingOperations(), {
-      clock,
-      confirmationMs: CANCEL_CONFIRMATION_MS,
-      onIncident: (event) =>
-        incidents.push({
-          cancellation: event.cancellation,
-          message: event.error.message,
-        }),
-    });
+    let innerAborted = false;
+    const wrapped = wrapChildBashOperations(
+      {
+        exec: (_command, _cwd, options) => {
+          options.signal?.addEventListener("abort", () => {
+            innerAborted = true;
+          });
+          return new Promise(() => {});
+        },
+      },
+      {
+        clock,
+        confirmationMs: CANCEL_CONFIRMATION_MS,
+        onIncident: (event) =>
+          incidents.push({
+            cancellation: event.cancellation,
+            message: event.error.message,
+          }),
+      },
+    );
     const pending = wrapped.exec("sleep 120", "/tmp", {
       onData() {},
       timeout: 1,
@@ -179,6 +191,7 @@ describe("wrapChildBashOperations", () => {
     assert.equal(incidents.length, 1);
     assert.equal(incidents[0]?.cancellation, "unconfirmed");
     assert.match(incidents[0]?.message ?? "", /^timeout:/);
+    assert.equal(innerAborted, true);
   });
 
   it("does not treat abort as timeout", async () => {
