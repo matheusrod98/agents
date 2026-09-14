@@ -8,9 +8,12 @@ PI := $(HOME)/.pi/agent
 .DEFAULT:
 	@:
 
-all: doctor
+# Install first, then verify: doctor checks the deployed state, so a
+# drifted machine is repaired by the same command that reports it.
+all:
 	@$(MAKE) pi
 	@$(MAKE) pre-commit:install
+	@$(MAKE) doctor
 
 pi: pi\:settings pi\:extensions pi\:prompts pi\:themes pi\:skills pi\:web-search
 
